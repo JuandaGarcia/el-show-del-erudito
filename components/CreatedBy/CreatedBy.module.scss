@@ -24,6 +24,8 @@
 		border-radius: 50px;
 		border: 2px solid var(--foreground);
 		transition: 0.5s;
+		pointer-events: none;
+		user-select: none;
 	}
 	&__content {
 		padding-right: 1.5rem;

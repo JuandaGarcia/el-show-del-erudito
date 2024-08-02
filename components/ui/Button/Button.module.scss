@@ -1,2 +1,19 @@
 .button {
+	--shadow-size: 4px;
+	width: max-content;
+	background: #fff;
+	border: 2px solid var(--foreground);
+	min-height: 46px;
+	border-radius: 50px;
+	padding: 0 2rem;
+	box-shadow: 0 0 var(--foreground), 0 0 var(--foreground),
+		var(--shadow-size) var(--shadow-size) 0px 0px var(--foreground);
+	transition-property: all;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 0.15s;
+	font-size: 1.5rem;
+	&:hover {
+		transform: translate(var(--shadow-size), var(--shadow-size));
+		box-shadow: 0 0 var(--foreground), 0 0 var(--foreground);
+	}
 }
