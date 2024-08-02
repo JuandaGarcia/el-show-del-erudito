@@ -1,0 +1,109 @@
+@import '../styles/mixins/responsive';
+
+.home {
+	min-height: 100vh;
+	background-color: #ffdab8;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-top: 150px;
+	min-height: 100vh;
+	@include desktop {
+		padding-top: initial;
+	}
+	&__content {
+		display: grid;
+		gap: 2rem;
+		padding: 2rem;
+		z-index: 1;
+		@include desktop {
+			padding-left: 141px;
+		}
+		&__logo {
+			width: 20rem;
+			@include desktop {
+				width: 30rem;
+			}
+		}
+		&__text {
+			@include desktop {
+				max-width: 660px;
+			}
+		}
+		&__created_by {
+			position: relative;
+		}
+	}
+	&__light {
+		position: fixed;
+		top: 0;
+		left: 2rem;
+		width: 5rem;
+		animation: light 1s ease-in-out;
+		pointer-events: none;
+		@include desktop {
+			height: 20vh;
+			width: inherit;
+			left: initial;
+			right: 50vw;
+		}
+	}
+	&__plant {
+		position: fixed;
+		top: 0;
+		right: 2rem;
+		width: 6rem;
+		animation: plant 1s ease-in-out;
+		pointer-events: none;
+		@include desktop {
+			width: inherit;
+			height: 40vh;
+			right: 30vw;
+		}
+	}
+	&__room {
+		width: 100%;
+		animation: room 1s ease-in-out;
+		@include desktop {
+			width: initial;
+			position: fixed;
+			right: 0;
+			bottom: 0;
+			height: 100vh;
+			pointer-events: none;
+		}
+	}
+}
+
+@keyframes plant {
+	from {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+@keyframes light {
+	from {
+		transform: translateY(-100%) rotate(90deg);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0) rotate(0);
+		opacity: 1;
+	}
+}
+
+@keyframes room {
+	from {
+		opacity: 0;
+		transform: translateX(50%);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
