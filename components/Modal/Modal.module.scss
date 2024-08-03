@@ -1,0 +1,43 @@
+.modal {
+	position: relative;
+	z-index: 2;
+	$animation-duration: 0.2s;
+	&__content {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background-color: rgba(86, 8, 210, 0.8);
+		backdrop-filter: saturate(180%) blur(5px);
+		border-radius: 10px;
+		padding: 2rem;
+		border: 6px solid var(--foreground);
+		z-index: 1;
+		animation: content $animation-duration linear forwards;
+	}
+	&__overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.2);
+		opacity: 0;
+		animation: show $animation-duration linear forwards;
+	}
+}
+
+@keyframes show {
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes content {
+	0% {
+		transform: translate(-50%, -50%) scale(0.5);
+	}
+	100% {
+		transform: translate(-50%, -50%) scale(1);
+	}
+}

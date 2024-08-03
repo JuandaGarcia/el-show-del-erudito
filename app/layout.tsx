@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Exo_2 } from 'next/font/google'
 import './globals.scss'
+import ClientEvents from 'components/ClientEvents/ClientEvents'
 
 const exo2 = Exo_2({ subsets: ['latin'] })
 
@@ -15,8 +16,12 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang="en">
-			<body className={exo2.className}>{children}</body>
+		<html lang="es">
+			<body className={exo2.className}>
+				{children}
+				<ClientEvents />
+				<div id="modal" />
+			</body>
 		</html>
 	)
 }
