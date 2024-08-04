@@ -1,0 +1,34 @@
+@import './../../styles/mixins/responsive';
+
+.game {
+	background: var(--background);
+	min-height: 100vh;
+	&__container {
+		display: grid;
+		gap: 1rem;
+		padding: 2rem;
+		width: 100%;
+		max-width: 900px;
+		margin: 0 auto;
+		&__controls {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		&__wildcards {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 1rem;
+		}
+		&__content {
+			&__list {
+				list-style: none;
+				display: grid;
+				gap: 1rem;
+				@include desktop {
+					grid-template-columns: 1fr 1fr;
+				}
+			}
+		}
+	}
+}

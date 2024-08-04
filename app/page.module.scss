@@ -2,7 +2,7 @@
 
 .home {
 	min-height: 100vh;
-	background-color: #ffdab8;
+	background-color: var(--background);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;

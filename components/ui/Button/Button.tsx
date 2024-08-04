@@ -1,6 +1,6 @@
 import { bebasNeue } from 'fonts/bebasNeue'
 import s from './Button.module.scss'
-import { ButtonHTMLAttributes, PropsWithChildren } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 	fullWidth?: boolean

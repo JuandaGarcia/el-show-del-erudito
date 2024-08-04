@@ -6,6 +6,10 @@
 	font-size: 1.5rem;
 	box-shadow: $neo-brutalism-box-shadow;
 	user-select: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
 	&:hover,
 	&:disabled {
 		transform: translate($shadow-size, $shadow-size);

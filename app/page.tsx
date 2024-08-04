@@ -13,11 +13,170 @@ import { useState } from 'react'
 import Input from 'components/ui/Input/Input'
 import { useForm } from 'react-hook-form'
 import { createQuestions } from 'lib/createQuestions'
+import { Question } from 'utils/schemas/question'
+import Game from 'components/Game/Game'
 
 const Home = () => {
 	const maxLengthSubject = 50
 	const [openHowWorlsModal, setOpenHowWorksModal] = useState(false)
 	const [openStartModal, setOpenStartModal] = useState(false)
+	const [questions, setQuestions] = useState<Question[]>([
+		/* {
+			question: '¿Cuál es el país de origen del fútbol?',
+			options: {
+				A: 'Inglaterra',
+				B: 'Brasil',
+				C: 'Argentina',
+				D: 'Italia',
+			},
+			correct_answer: 'A',
+		},
+		{
+			question: '¿Cuántos jugadores hay en un equipo de fútbol en el campo?',
+			options: {
+				A: '9',
+				B: '10',
+				C: '11',
+				D: '12',
+			},
+			correct_answer: 'C',
+		},
+		{
+			question: '¿Qué significa la tarjeta roja en el fútbol?',
+			options: {
+				A: 'Advertencia',
+				B: 'Expulsión',
+				C: 'Gol',
+				D: 'Falta',
+			},
+			correct_answer: 'B',
+		},
+		{
+			question:
+				'¿Quién es el máximo goleador de la historia de la Copa del Mundo?',
+			options: {
+				A: 'Pelé',
+				B: 'Diego Maradona',
+				C: 'Marta',
+				D: 'Miroslav Klose',
+			},
+			correct_answer: 'D',
+		},
+		{
+			question: '¿En qué año se celebró la primera Copa del Mundo de la FIFA?',
+			options: {
+				A: '1920',
+				B: '1930',
+				C: '1940',
+				D: '1950',
+			},
+			correct_answer: 'B',
+		},
+		{
+			question: '¿Qué equipo ha ganado más Copas del Mundo?',
+			options: {
+				A: 'Alemania',
+				B: 'Brasil',
+				C: 'Italia',
+				D: 'Argentina',
+			},
+			correct_answer: 'B',
+		},
+		{
+			question: "¿Quién es conocido como 'La Pulga'?",
+			options: {
+				A: 'Cristiano Ronaldo',
+				B: 'Neymar',
+				C: 'Lionel Messi',
+				D: 'Ronaldinho',
+			},
+			correct_answer: 'C',
+		},
+		{
+			question: '¿Cuál es el estadio más grande del mundo?',
+			options: {
+				A: 'Camp Nou',
+				B: 'Maracanã',
+				C: 'Wembley',
+				D: 'Estadio Azteca',
+			},
+			correct_answer: 'B',
+		},
+		{
+			question: '¿Qué país ganó la Eurocopa 2016?',
+			options: {
+				A: 'Francia',
+				B: 'Portugal',
+				C: 'España',
+				D: 'Alemania',
+			},
+			correct_answer: 'B',
+		},
+		{
+			question:
+				'¿Quién es el entrenador con más títulos en la historia del fútbol?',
+			options: {
+				A: 'Pep Guardiola',
+				B: 'Alex Ferguson',
+				C: 'José Mourinho',
+				D: 'Carlo Ancelotti',
+			},
+			correct_answer: 'B',
+		},
+		{
+			question:
+				'¿Qué jugador tiene el récord de más goles en la historia de la Liga española?',
+			options: {
+				A: 'Raúl',
+				B: 'Cristiano Ronaldo',
+				C: 'Lionel Messi',
+				D: 'Telmo Zarra',
+			},
+			correct_answer: 'C',
+		},
+		{
+			question: '¿Cuál es el club más valioso del mundo según Forbes en 2021?',
+			options: {
+				A: 'Real Madrid',
+				B: 'Barcelona',
+				C: 'Manchester United',
+				D: 'Bayern Múnich',
+			},
+			correct_answer: 'C',
+		},
+		{
+			question: '¿Qué selección ganó la Copa América 2021?',
+			options: {
+				A: 'Argentina',
+				B: 'Brasil',
+				C: 'Chile',
+				D: 'Uruguay',
+			},
+			correct_answer: 'A',
+		},
+		{
+			question: '¿Quién es el máximo goleador de la UEFA Champions League?',
+			options: {
+				A: 'Lionel Messi',
+				B: 'Cristiano Ronaldo',
+				C: 'Raúl',
+				D: 'Robert Lewandowski',
+			},
+			correct_answer: 'B',
+		},
+		{
+			question: '¿Qué país fue el anfitrión de la Copa del Mundo 2018?',
+			options: {
+				A: 'Brasil',
+				B: 'Rusia',
+				C: 'Sudáfrica',
+				D: 'Alemania',
+			},
+			correct_answer: 'B',
+		},
+	 */
+	] as Question[])
+	const [questionsError, setQuestionsError] = useState<string | null>(null)
 	const {
 		register,
 		handleSubmit,
@@ -28,11 +187,18 @@ const Home = () => {
 	const toggleStartModal = () => setOpenStartModal(!openStartModal)
 
 	const onSubmit = handleSubmit(async ({ subject }) => {
-		const questions = await createQuestions(subject)
-		console.log({ questions })
+		const { questions, error_message } = await createQuestions(subject)
+
+		if (questions) {
+			setQuestions(questions)
+		} else if (error_message) {
+			setQuestionsError(error_message)
+		}
 	})
 
-	return (
+	return questions.length ? (
+		<Game questions={questions} />
+	) : (
 		<main className={s.home}>
 			<section className={s.home__content}>
 				<Logo className={s.home__content__logo} />
@@ -104,9 +270,9 @@ const Home = () => {
 									})}
 								/>
 							</label>
-							{errors.subject && (
+							{(errors.subject || questionsError) && (
 								<p className={s.home__content__start__error}>
-									{errors.subject.message}
+									{errors?.subject?.message || questionsError}
 								</p>
 							)}
 							<p className={s.home__content__start__text}>
