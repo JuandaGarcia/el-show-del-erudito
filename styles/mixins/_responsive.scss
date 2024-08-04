@@ -3,3 +3,9 @@
 		@content;
 	}
 }
+
+@mixin custom-breakpoint($custom: 1200px) {
+	@media only screen and (min-width: $custom) {
+		@content;
+	}
+}

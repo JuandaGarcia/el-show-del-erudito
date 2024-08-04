@@ -23,6 +23,9 @@
 		&__logo {
 			width: 18rem;
 			@include desktop {
+				width: 20rem;
+			}
+			@include custom-breakpoint(1440px) {
 				width: 30rem;
 			}
 		}
