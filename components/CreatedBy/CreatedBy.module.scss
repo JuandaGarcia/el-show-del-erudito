@@ -5,9 +5,7 @@
 	gap: 0.5rem;
 	transition: 1s all;
 	opacity: 0;
-	&[data-animate='true'] {
-		animation: show 1s linear forwards 3s;
-	}
+	animation: show 1s linear forwards 3s;
 	&:hover {
 		& .created_by__img {
 			transform: rotate(360deg);

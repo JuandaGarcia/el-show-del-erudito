@@ -1,17 +1,16 @@
-import { Bebas_Neue } from 'next/font/google'
+import { bebasNeue } from 'fonts/bebasNeue'
 import s from './Button.module.scss'
 import { ButtonHTMLAttributes, PropsWithChildren } from 'react'
 
-const bebasNeue = Bebas_Neue({ weight: '400', subsets: ['latin'] })
-
-const Button = ({
-	children,
-	className,
-	...props
-}: ButtonHTMLAttributes<HTMLButtonElement>) => {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+	fullWidth?: boolean
+}
+const Button = ({ children, className, fullWidth, ...props }: Props) => {
 	return (
 		<button
-			className={`${s.button} ${bebasNeue.className} ${className}`}
+			className={`${s.button} ${bebasNeue.className} ${className} ${
+				fullWidth ? s.full_width : ''
+			}`}
 			{...props}
 		>
 			{children}

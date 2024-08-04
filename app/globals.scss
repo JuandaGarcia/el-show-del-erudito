@@ -1,5 +1,6 @@
 :root {
 	--foreground: #0d0120;
+	--color-error: #f57c61;
 }
 
 * {
@@ -22,4 +23,12 @@ a {
 
 button {
 	cursor: pointer;
+	border: none;
+	font-family: inherit;
+	outline: none;
+}
+
+::selection {
+	background: rgba(86, 8, 210, 0.5);
+	color: var(--foreground);
 }

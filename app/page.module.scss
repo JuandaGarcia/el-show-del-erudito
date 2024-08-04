@@ -18,34 +18,75 @@
 		z-index: 1;
 		@include desktop {
 			padding-left: 141px;
+			max-width: 750px;
 		}
 		&__logo {
-			width: 20rem;
+			width: 18rem;
 			@include desktop {
 				width: 30rem;
 			}
 		}
 		&__text {
-			@include desktop {
-				max-width: 660px;
-			}
+			font-size: 1.1rem;
+		}
+		&__how_works_btn {
+			width: max-content;
+			background: none;
+			text-decoration: underline;
+			font-size: 1.2rem;
+			cursor: pointer;
+			font-weight: bold;
 		}
 		button.home__content__button {
 			width: 100%;
 			max-width: 350px;
+		}
+		&__how_works {
+			&__list {
+				display: grid;
+				gap: 1rem;
+				list-style-position: inside;
+			}
+		}
+		&__start {
+			&__label {
+				display: grid;
+				gap: 0.5rem;
+				font-weight: 600;
+				margin-bottom: 0.5rem;
+			}
+			&__error {
+				color: var(--color-error);
+				font-size: 14px;
+				margin-bottom: 0.5rem;
+			}
+			&__text {
+				font-size: 14px;
+			}
+			&__button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5rem;
+				&__loader {
+					width: 1.6rem;
+					animation: loader_button 1s infinite;
+				}
+			}
 		}
 		&__created_by {
 			position: relative;
 		}
 	}
 	&__light {
-		position: fixed;
+		position: absolute;
 		top: 0;
 		left: 2rem;
 		width: 5rem;
 		animation: light 1s ease-in-out;
 		pointer-events: none;
 		@include desktop {
+			position: fixed;
 			height: 20vh;
 			width: inherit;
 			left: initial;
@@ -53,13 +94,14 @@
 		}
 	}
 	&__plant {
-		position: fixed;
+		position: absolute;
 		top: 0;
 		right: 2rem;
 		width: 6rem;
 		animation: plant 1s ease-in-out;
 		pointer-events: none;
 		@include desktop {
+			position: fixed;
 			width: inherit;
 			height: 40vh;
 			right: 30vw;
@@ -109,5 +151,17 @@
 	to {
 		opacity: 1;
 		transform: translateX(0);
+	}
+}
+
+@keyframes loader_button {
+	0% {
+		transform: rotate(-20deg);
+	}
+	50% {
+		transform: rotate(20deg);
+	}
+	100% {
+		transform: rotate(-20deg);
 	}
 }

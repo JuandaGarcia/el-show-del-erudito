@@ -1,0 +1,15 @@
+@import '../../../styles/mixins/neobrutalism-item';
+
+.input {
+	@include neo-brutalism-item;
+	border-radius: 5px;
+	font-size: 1rem;
+	outline: none;
+	font-family: inherit;
+	&:focus {
+		box-shadow: $neo-brutalism-box-shadow;
+	}
+	&.error {
+		border-color: var(--color-error);
+	}
+}

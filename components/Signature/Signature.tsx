@@ -1,26 +1,15 @@
 'use client'
-import { useRef } from 'react'
 import s from './Signature.module.scss'
-import { motion, useInView } from 'framer-motion'
 
 const Signature = () => {
-	const ref = useRef<SVGSVGElement | null>(null)
-	const isInView = useInView(ref, { once: true })
-
 	return (
-		<motion.svg
-			initial={{ opacity: 1 }}
-			whileInView={{ opacity: 0 }}
-			transition={{ delay: 2.5 }}
-			viewport={{ once: true }}
+		<svg
 			width="374"
 			height="176"
 			viewBox="0 0 374 176"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 			className={s.signature}
-			ref={ref}
-			data-animate={isInView}
 		>
 			<path
 				d="M30.8691 17.9359C34.2879 16.7964 37.565 15.2734 40.967 14.0867C42.1281 13.6817 43.2731 13.6185 44.4441 13.3169C46.0493 12.9034 47.6669 12.5401 49.2685 12.1108C52.0541 11.3641 54.9258 11.2302 57.7625 10.7764C62.5368 10.0125 67.374 9.62158 72.21 9.62158"
@@ -106,7 +95,7 @@ const Signature = () => {
 				strokeWidth="3"
 				strokeLinecap="round"
 			/>
-		</motion.svg>
+		</svg>
 	)
 }
 

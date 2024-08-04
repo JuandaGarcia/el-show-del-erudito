@@ -2,18 +2,45 @@
 	position: relative;
 	z-index: 2;
 	$animation-duration: 0.2s;
+	$padding: 2rem;
 	&__content {
 		position: fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
+		animation: content $animation-duration linear forwards;
+		z-index: 1;
+		width: calc(100% - (2 * #{$padding}));
+		max-width: 450px;
 		background-color: rgba(86, 8, 210, 0.8);
 		backdrop-filter: saturate(180%) blur(5px);
 		border-radius: 10px;
-		padding: 2rem;
 		border: 6px solid var(--foreground);
-		z-index: 1;
-		animation: content $animation-duration linear forwards;
+		&__close {
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: 1rem;
+			cursor: pointer;
+			color: #fff;
+			font-size: 1.5rem;
+			background: none;
+			border: none;
+		}
+		&__header {
+			text-align: center;
+			padding: $padding;
+			color: #fff;
+			font-size: 1.5rem;
+		}
+		&__content {
+			padding: $padding;
+			background-color: #fff;
+			color: #5608d2;
+		}
+		&__footer {
+			padding: $padding;
+		}
 	}
 	&__overlay {
 		position: fixed;
@@ -35,7 +62,7 @@
 
 @keyframes content {
 	0% {
-		transform: translate(-50%, -50%) scale(0.5);
+		transform: translate(-50%, -50%) scale(0.8);
 	}
 	100% {
 		transform: translate(-50%, -50%) scale(1);

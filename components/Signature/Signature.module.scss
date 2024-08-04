@@ -4,8 +4,14 @@
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
+	animation: hide 0.5s linear forwards 2.5s;
 	path {
 		stroke-width: 5px;
+		animation-name: sign;
+		animation-duration: 0.2s;
+		animation-timing-function: ease;
+		animation-fill-mode: forwards;
+		stroke: var(--foreground, #000);
 	}
 	/* To create de SVG with paths use Figma with the pencil tool, creatre a group and export */
 	/* To get stroke-dasharray and stroke-dashoffset you can use $0.getTotalLength() in each path in the browser */
@@ -78,15 +84,17 @@
 		stroke-dashoffset: 168.07432556152344;
 		animation-delay: 1.3s;
 	}
-	&[data-animate='true'] path {
-		animation-name: sign;
-		animation-duration: 0.2s;
-		animation-timing-function: ease;
-		animation-fill-mode: forwards;
-	}
 }
 @keyframes sign {
 	to {
 		stroke-dashoffset: 0;
+	}
+}
+@keyframes hide {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
 	}
 }

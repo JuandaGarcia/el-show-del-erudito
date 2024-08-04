@@ -1,20 +1,12 @@
 'use client'
 import s from './CreatedBy.module.scss'
-import { useRef } from 'react'
-import { useInView } from 'framer-motion'
-
 const CreatedBy = () => {
-	const ref = useRef<HTMLAnchorElement | null>(null)
-	const isInView = useInView(ref, { once: true })
-
 	return (
 		<a
 			href="https://github.com/JuandaGarcia"
 			target="_blank"
 			rel="noopener noreferrer"
 			className={s.created_by}
-			ref={ref}
-			data-animate={isInView}
 		>
 			<img
 				src="/img/profile.jpg"
