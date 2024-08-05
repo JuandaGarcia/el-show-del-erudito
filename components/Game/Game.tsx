@@ -9,6 +9,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import { GoHomeFill } from 'react-icons/go'
 import Modal from 'components/ui/Modal/Modal'
 import PhoneIcon from 'components/PhoneIcon/PhoneIcon'
+import PublicHelpChart from 'components/PublicHelpChart/PublicHelpChart'
 
 type Props = {
 	questions: Question[]
@@ -146,12 +147,48 @@ const Game = ({ questions }: Props) => {
 					</ul>
 				</div>
 				<Modal
+					noBackground
 					open={openPublicHelpModal}
 					handleClose={closePublicHelpModal}
-				></Modal>
+				>
+					<div className={s.game__container__public_help}>
+						<h2 className={s.game__container__public_help__title}>
+							¡Ayuda del público!
+						</h2>
+						<div className={s.game__container__public_help__imgs}>
+							<PublicHelpChart
+								answer={currentQuestion.correct_answer}
+								className={s.game__container__public_help__imgs__chart}
+							/>
+							<img
+								src="/img/cat.png"
+								alt="El gato erudito"
+								width={160}
+								height={149}
+								className={s.game__container__phone_call__imgs__cat_help_1}
+							/>
+							<img
+								src="/img/mac.png"
+								alt="Mac"
+								width={116}
+								height={135}
+								className={s.game__container__phone_call__imgs__mac}
+							/>
+						</div>
+						<p className={s.game__container__public_help__message}>
+							El público ha votado y la opción más votada es la{' '}
+							<span className={s.game__container__public_help__message__answer}>
+								{currentQuestion.correct_answer}
+							</span>
+						</p>
+						<Button fullWidth onClick={closePublicHelpModal}>
+							Continuar
+						</Button>
+					</div>
+				</Modal>
 				<Modal
-					open={openPhoneCallModal}
 					noBackground
+					open={openPhoneCallModal}
 					handleClose={closePhoneCallModal}
 				>
 					<div className={s.game__container__phone_call}>
@@ -165,7 +202,7 @@ const Game = ({ questions }: Props) => {
 								alt="El gato erudito"
 								width={160}
 								height={149}
-								className={s.game__container__phone_call__imgs__cat}
+								className={s.game__container__phone_call__imgs__cat_call}
 							/>
 						</div>
 						<p className={s.game__container__phone_call__message}>

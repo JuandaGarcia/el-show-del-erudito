@@ -89,6 +89,7 @@
 		width: 5rem;
 		animation: light 1s ease-in-out;
 		pointer-events: none;
+		user-select: none;
 		@include desktop {
 			position: fixed;
 			height: 20vh;
@@ -104,6 +105,7 @@
 		width: 6rem;
 		animation: plant 1s ease-in-out;
 		pointer-events: none;
+		user-select: none;
 		@include desktop {
 			position: fixed;
 			width: inherit;
@@ -114,13 +116,14 @@
 	&__room {
 		width: 100%;
 		animation: room 1s ease-in-out;
+		user-select: none;
+		pointer-events: none;
 		@include desktop {
 			width: initial;
 			position: fixed;
 			right: 0;
 			bottom: 0;
 			height: 100vh;
-			pointer-events: none;
 		}
 	}
 }

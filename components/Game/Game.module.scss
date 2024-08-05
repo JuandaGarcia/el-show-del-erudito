@@ -37,7 +37,8 @@
 				}
 			}
 		}
-		&__phone_call {
+		&__phone_call,
+		&__public_help {
 			text-align: center;
 			color: #fff;
 			padding: 2rem 0;
@@ -49,9 +50,31 @@
 				display: grid;
 				justify-items: center;
 				gap: 1rem;
+				margin: 0 auto;
 				margin-bottom: 2rem;
-				&__cat {
+				position: relative;
+				width: max-content;
+				&__chart {
+					width: 200px;
+					z-index: 1;
+				}
+				&__cat_help_1 {
+					position: absolute;
+					left: -5rem;
+					top: 4rem;
+				}
+				&__mac {
+					position: absolute;
+					right: -5rem;
+					top: 4rem;
+					transform: rotate(45deg);
+					animation: mac_help 2s infinite;
+				}
+				&__cat_call,
+				&__cat_help_1 {
 					animation: cat_call 1s infinite;
+					pointer-events: none;
+					user-select: none;
 				}
 			}
 			&__message {
@@ -75,5 +98,17 @@
 	}
 	100% {
 		transform: rotate(-10deg);
+	}
+}
+
+@keyframes mac_help {
+	0% {
+		transform: rotate(45deg) translateY(0);
+	}
+	50% {
+		transform: rotate(45deg) translateY(10px);
+	}
+	100% {
+		transform: rotate(45deg) translateY(0);
 	}
 }

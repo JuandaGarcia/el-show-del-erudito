@@ -1,0 +1,14 @@
+.line {
+	animation: line 1s forwards;
+	transform-origin: top;
+	transform: rotate(180deg);
+}
+
+@keyframes line {
+	0% {
+		transform: rotate(180deg) scaleY(0);
+	}
+	100% {
+		transform: rotate(180deg) scaleY(1);
+	}
+}
