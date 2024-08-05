@@ -14,6 +14,13 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			&__countdown {
+				z-index: 3;
+				font-size: 1.5rem;
+				&.modal {
+					color: #fff;
+				}
+			}
 		}
 		&__wildcards {
 			display: grid;
@@ -30,5 +37,43 @@
 				}
 			}
 		}
+		&__phone_call {
+			text-align: center;
+			color: #fff;
+			padding: 2rem 0;
+			&__title {
+				font-size: 1.5rem;
+				margin-bottom: 2rem;
+			}
+			&__imgs {
+				display: grid;
+				justify-items: center;
+				gap: 1rem;
+				margin-bottom: 2rem;
+				&__cat {
+					animation: cat_call 1s infinite;
+				}
+			}
+			&__message {
+				font-size: 1.2rem;
+				margin-bottom: 2rem;
+				&__answer {
+					font-size: 1.5rem;
+					font-weight: bold;
+				}
+			}
+		}
+	}
+}
+
+@keyframes cat_call {
+	0% {
+		transform: rotate(-10deg);
+	}
+	50% {
+		transform: rotate(10deg);
+	}
+	100% {
+		transform: rotate(-10deg);
 	}
 }

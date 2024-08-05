@@ -8,6 +8,7 @@ import { IoIosPeople } from 'react-icons/io'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import { GoHomeFill } from 'react-icons/go'
 import Modal from 'components/ui/Modal/Modal'
+import PhoneIcon from 'components/PhoneIcon/PhoneIcon'
 
 type Props = {
 	questions: Question[]
@@ -74,21 +75,29 @@ const Game = ({ questions }: Props) => {
 					<Button aria-label="Ayuda del público">
 						<GoHomeFill />
 					</Button>
-					<CountdownCircleTimer
-						key={currentQuestionIndex}
-						isPlaying={isPlaying}
-						duration={timeToAnswer}
-						colors={['#86E69B', '#e7b416', '#f57c61']}
-						trailColor="#fff"
-						colorsTime={[30, 10, 0]}
-						strokeWidth={10}
-						size={60}
-						onComplete={gameOver}
+					<div
+						className={`${s.game__container__controls__countdown} ${
+							openPhoneCallModal || openPublicHelpModal ? s.modal : ''
+						}`}
 					>
-						{({ remainingTime }) => (
-							<span className={`${bebasNeue.className}`}>{remainingTime}</span>
-						)}
-					</CountdownCircleTimer>
+						<CountdownCircleTimer
+							key={currentQuestionIndex}
+							isPlaying={isPlaying}
+							duration={timeToAnswer}
+							colors={['#86E69B', '#e7b416', '#f57c61']}
+							trailColor="#fff"
+							colorsTime={[30, 10, 0]}
+							strokeWidth={10}
+							size={60}
+							onComplete={gameOver}
+						>
+							{({ remainingTime }) => (
+								<span className={`${bebasNeue.className}`}>
+									{remainingTime}
+								</span>
+							)}
+						</CountdownCircleTimer>
+					</div>
 				</div>
 				<div className={s.game__container__wildcards}>
 					<Button
@@ -111,11 +120,11 @@ const Game = ({ questions }: Props) => {
 					</Button>
 					<Button
 						fullWidth
-						title="50 : 50"
+						title="50:50"
 						onClick={fiftyFifty}
 						disabled={!isFiftyFiftyAvailable}
 					>
-						50 : 50
+						50:50
 					</Button>
 				</div>
 				<div className={s.game__container__content}>
@@ -142,8 +151,35 @@ const Game = ({ questions }: Props) => {
 				></Modal>
 				<Modal
 					open={openPhoneCallModal}
+					noBackground
 					handleClose={closePhoneCallModal}
-				></Modal>
+				>
+					<div className={s.game__container__phone_call}>
+						<h2 className={s.game__container__phone_call__title}>
+							¿Qué dice tu amigo?
+						</h2>
+						<div className={s.game__container__phone_call__imgs}>
+							<PhoneIcon />
+							<img
+								src="/img/cat.png"
+								alt="El gato erudito"
+								width={160}
+								height={149}
+								className={s.game__container__phone_call__imgs__cat}
+							/>
+						</div>
+						<p className={s.game__container__phone_call__message}>
+							&quot;Yo creo que la respuesta correcta es la opción{' '}
+							<span className={s.game__container__phone_call__message__answer}>
+								{currentQuestion.correct_answer}
+							</span>
+							&quot;
+						</p>
+						<Button fullWidth onClick={closePhoneCallModal}>
+							Continuar
+						</Button>
+					</div>
+				</Modal>
 			</section>
 		</main>
 	)

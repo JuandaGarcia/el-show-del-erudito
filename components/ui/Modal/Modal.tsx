@@ -7,8 +7,14 @@ import { IoClose } from 'react-icons/io5'
 type Props = {
 	open: boolean
 	handleClose?: () => void
+	noBackground?: boolean
 }
-const Modal = ({ open, handleClose, children }: PropsWithChildren<Props>) => {
+const Modal = ({
+	open,
+	handleClose,
+	children,
+	noBackground,
+}: PropsWithChildren<Props>) => {
 	const modalRef = useRef<HTMLDivElement>(null)
 	const [container, setContainer] = useState<Element | null>()
 
@@ -41,7 +47,10 @@ const Modal = ({ open, handleClose, children }: PropsWithChildren<Props>) => {
 	return open && container
 		? createPortal(
 				<div className={s.modal}>
-					<div className={s.modal__content} ref={modalRef}>
+					<div
+						className={`${s.modal__content} ${noBackground && s.no_background}`}
+						ref={modalRef}
+					>
 						<button
 							className={s.modal__content__close}
 							aria-label="Cerrar Modal"

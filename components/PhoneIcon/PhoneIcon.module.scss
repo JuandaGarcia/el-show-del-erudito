@@ -1,0 +1,36 @@
+.icon {
+	display: inline-block;
+	width: 5rem;
+	height: 5rem;
+	stroke-width: 0;
+	stroke: #fff;
+	fill: #fff;
+}
+
+.wave {
+	animation: zoomIn 1.2s infinite ease-out;
+	transform-origin: 50% 50%;
+}
+
+.wave_sm {
+	animation-delay: 0.3s;
+}
+
+.wave_md {
+	animation-delay: 0.45s;
+}
+
+.wave_lg {
+	animation-delay: 0.6s;
+}
+
+@keyframes zoomIn {
+	from {
+		opacity: 0;
+		transform: scale(0.2);
+	}
+
+	50% {
+		opacity: 1;
+	}
+}

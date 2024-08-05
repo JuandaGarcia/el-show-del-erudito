@@ -21,7 +21,7 @@ const Home = () => {
 	const [openHowWorlsModal, setOpenHowWorksModal] = useState(false)
 	const [openStartModal, setOpenStartModal] = useState(false)
 	const [questions, setQuestions] = useState<Question[]>([
-		/* {
+		{
 			question: '¿Cuál es el país de origen del fútbol?',
 			options: {
 				A: 'Inglaterra',
@@ -174,7 +174,6 @@ const Home = () => {
 			},
 			correct_answer: 'B',
 		},
-	 */
 	] as Question[])
 	const [questionsError, setQuestionsError] = useState<string | null>(null)
 	const {
