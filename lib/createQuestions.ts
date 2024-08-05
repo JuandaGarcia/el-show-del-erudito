@@ -24,6 +24,7 @@ export const createQuestions = async (
 
 		return object
 	} catch (error) {
+		console.error(error)
 		return {
 			error_message:
 				'Ocurrió un error al generar las preguntas, por favor intenta de nuevo',
