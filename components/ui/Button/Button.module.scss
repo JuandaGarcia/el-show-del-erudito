@@ -1,7 +1,9 @@
 @import '../../../styles/mixins/neobrutalism-item';
+@import '../../../styles/mixins/responsive';
 
 .button {
 	@include neo-brutalism-item;
+	padding: 0.5rem 2rem;
 	border-radius: 50px;
 	font-size: 1.5rem;
 	box-shadow: $neo-brutalism-box-shadow;
@@ -11,9 +13,23 @@
 	justify-content: center;
 	text-align: center;
 	color: var(--foreground);
-	&:hover,
-	&:disabled {
+	@mixin pressed {
 		transform: translate($shadow-size, $shadow-size);
 		box-shadow: 0 0 var(--foreground), 0 0 var(--foreground);
+	}
+	&:hover {
+		@include desktop {
+			@include pressed;
+		}
+	}
+	&:active {
+		@include pressed;
+	}
+	&:disabled {
+		@include pressed;
+	}
+	&.purple {
+		color: #fff;
+		background-color: var(--color-brand-1);
 	}
 }

@@ -1,46 +1,92 @@
 import s from './Game.module.scss'
+import Modal, {
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+} from 'components/ui/Modal/Modal'
 import Button from 'components/ui/Button/Button'
-import { MdPhone } from 'react-icons/md'
-import { useState } from 'react'
-import { Question } from 'utils/schemas/question'
-import { bebasNeue } from 'fonts/bebasNeue'
-import { IoIosPeople } from 'react-icons/io'
-import { CountdownCircleTimer } from 'react-countdown-circle-timer'
-import { GoHomeFill } from 'react-icons/go'
-import Modal from 'components/ui/Modal/Modal'
+import confetti from 'canvas-confetti'
 import PhoneIcon from 'components/PhoneIcon/PhoneIcon'
 import PublicHelpChart from 'components/PublicHelpChart/PublicHelpChart'
+import { MdPhone } from 'react-icons/md'
+import { CSSProperties, useState } from 'react'
+import { Question } from 'utils/schemas/question'
+import { bebasNeue } from 'fonts/bebasNeue'
+import { GoHomeFill } from 'react-icons/go'
+import { IoIosPeople } from 'react-icons/io'
+import { CountdownCircleTimer } from 'react-countdown-circle-timer'
+import { awards, buttonSelectedAnimationDuration } from 'utils/constants'
 
 type Props = {
 	questions: Question[]
+	reset: () => void
 }
-const Game = ({ questions }: Props) => {
-	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-	const currentQuestion = questions[currentQuestionIndex]
-	const currentOptions = Object.entries(currentQuestion.options)
-	const [timeToAnswer, setTimeToAnswer] = useState(30)
+const Game = ({ questions, reset }: Props) => {
+	/* Game State */
 	const [isStarted, setIsStarted] = useState(false)
+	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [isPublicHelpAvailable, setIsPublicHelpAvailable] = useState(true)
 	const [isPhoneCallAvailable, setIsPhoneCallAvailable] = useState(true)
 	const [isFiftyFiftyAvailable, setIsFiftyFiftyAvailable] = useState(true)
 	const [disabledOptions, setDisabledOptions] = useState<string[]>([])
-	const [isPlaying, setIsPlaying] = useState(true)
+	const [answerSelected, setAnswerSelected] = useState<string | null>(null)
+	const [numberOfTimesPlayed, setNumberOfTimesPlayed] = useState(0)
+
+	/* Values */
+	const currentQuestion = questions[currentQuestionIndex]
+	const currentOptions = Object.entries(currentQuestion.options)
+	const buttonEvents = answerSelected ? s.remove_events : ''
+
+	/* Modals */
 	const [openPublicHelpModal, setOpenPublicHelpModal] = useState(false)
 	const [openPhoneCallModal, setOpenPhoneCallModal] = useState(false)
-	const isDisabled = (key: string) => disabledOptions.includes(key)
+	const [openGoHomeModal, setOpenGoHomeModal] = useState(false)
+	const [openSuccessModal, setOpenSuccessModal] = useState(false)
+	const [gameOverMessage, setGameOverMessage] = useState<string | null>(null)
 
 	const startGame = () => setIsStarted(true)
-
-	const gameOver = () => {}
+	const isDisabled = (key: string) => disabledOptions.includes(key)
+	const toggleGoHomeModal = () => setOpenGoHomeModal(!openGoHomeModal)
+	const onCompleteCountdown = () => setGameOverMessage('¡Se acabó el tiempo!')
+	const formatPrize = (prize: number) => `$${prize.toLocaleString()}`
 
 	const selectAnswer = (answer: string) => {
-		if (answer === currentQuestion.correct_answer) {
-			setCurrentQuestionIndex(prev => prev + 1)
-			setTimeToAnswer(30)
-			setDisabledOptions([])
-		} else {
-			alert('Incorrecto')
-		}
+		setAnswerSelected(answer)
+		// Await for the button animation
+		setTimeout(() => {
+			if (answer === currentQuestion.correct_answer) {
+				setOpenSuccessModal(true)
+				confetti({
+					particleCount: 25,
+					spread: 70,
+					origin: { y: 0.6 },
+					colors: ['#5608d2'],
+				})
+			} else {
+				setGameOverMessage('¡Has perdido!')
+			}
+		}, buttonSelectedAnimationDuration + 500)
+	}
+
+	const setDefaultsToSetQuestion = () => {
+		setDisabledOptions([])
+		setAnswerSelected(null)
+	}
+
+	const nextQuestion = () => {
+		setCurrentQuestionIndex(currentQuestionIndex + 1)
+		setDefaultsToSetQuestion()
+		setOpenSuccessModal(false)
+	}
+
+	const playAgain = () => {
+		setCurrentQuestionIndex(0)
+		setDefaultsToSetQuestion()
+		setIsPublicHelpAvailable(true)
+		setIsPhoneCallAvailable(true)
+		setIsFiftyFiftyAvailable(true)
+		setGameOverMessage(null)
+		setNumberOfTimesPlayed(numberOfTimesPlayed + 1)
 	}
 
 	const publicHelp = () => {
@@ -73,7 +119,7 @@ const Game = ({ questions }: Props) => {
 		<main className={s.game}>
 			<section className={s.game__container}>
 				<div className={s.game__container__controls}>
-					<Button aria-label="Ayuda del público">
+					<Button aria-label="Volver al Inicio" onClick={toggleGoHomeModal}>
 						<GoHomeFill />
 					</Button>
 					<div
@@ -82,15 +128,15 @@ const Game = ({ questions }: Props) => {
 						}`}
 					>
 						<CountdownCircleTimer
-							key={currentQuestionIndex}
-							isPlaying={isPlaying}
-							duration={timeToAnswer}
+							key={currentQuestionIndex + numberOfTimesPlayed}
+							isPlaying={answerSelected === null}
+							duration={30}
 							colors={['#86E69B', '#e7b416', '#f57c61']}
 							trailColor="#fff"
 							colorsTime={[30, 10, 0]}
 							strokeWidth={10}
 							size={60}
-							onComplete={gameOver}
+							onComplete={onCompleteCountdown}
 						>
 							{({ remainingTime }) => (
 								<span className={`${bebasNeue.className}`}>
@@ -107,6 +153,7 @@ const Game = ({ questions }: Props) => {
 						aria-label="Ayuda del público"
 						onClick={publicHelp}
 						disabled={!isPublicHelpAvailable}
+						className={buttonEvents}
 					>
 						<IoIosPeople />
 					</Button>
@@ -116,16 +163,18 @@ const Game = ({ questions }: Props) => {
 						aria-label="Llamar a un amigo"
 						onClick={phoneCall}
 						disabled={!isPhoneCallAvailable}
+						className={buttonEvents}
 					>
 						<MdPhone />
 					</Button>
 					<Button
 						fullWidth
-						title="50:50"
+						title="50 : 50"
 						onClick={fiftyFifty}
 						disabled={!isFiftyFiftyAvailable}
+						className={`${s.game__container__wildcards__button} ${buttonEvents}`}
 					>
-						50:50
+						50 : 50
 					</Button>
 				</div>
 				<div className={s.game__container__content}>
@@ -139,6 +188,21 @@ const Game = ({ questions }: Props) => {
 									fullWidth
 									onClick={() => selectAnswer(key)}
 									disabled={isDisabled(key)}
+									data-correct={
+										answerSelected && currentQuestion.correct_answer === key
+									}
+									className={`${s.game__container__content__list__button} ${
+										answerSelected === key ? s.selected : ''
+									}  ${buttonEvents}`}
+									style={
+										{
+											'--answer-color':
+												key === currentQuestion.correct_answer
+													? 'var(--color-success)'
+													: 'var(--color-error)',
+											'--animation-duration': `${buttonSelectedAnimationDuration}ms`,
+										} as CSSProperties
+									}
 								>
 									{key}: {value}
 								</Button>
@@ -148,6 +212,7 @@ const Game = ({ questions }: Props) => {
 				</div>
 				<Modal
 					noBackground
+					noCloseButton
 					open={openPublicHelpModal}
 					handleClose={closePublicHelpModal}
 				>
@@ -188,6 +253,7 @@ const Game = ({ questions }: Props) => {
 				</Modal>
 				<Modal
 					noBackground
+					noCloseButton
 					open={openPhoneCallModal}
 					handleClose={closePhoneCallModal}
 				>
@@ -217,7 +283,72 @@ const Game = ({ questions }: Props) => {
 						</Button>
 					</div>
 				</Modal>
+				<Modal open={openGoHomeModal} handleClose={toggleGoHomeModal}>
+					<ModalHeader>
+						<h2>¿Estás seguro que quieres salir?</h2>
+					</ModalHeader>
+					<ModalContent>
+						<p>Si sales, perderás todo tu progreso</p>
+					</ModalContent>
+					<ModalFooter>
+						<Button fullWidth onClick={reset}>
+							Salir
+						</Button>
+					</ModalFooter>
+				</Modal>
+				<Modal open={openSuccessModal} handleClose={nextQuestion}>
+					<ModalHeader>
+						<h2>¡Correcto! 💸</h2>
+					</ModalHeader>
+					<ModalContent>
+						<h3>Premios</h3>
+						<div className={s.game__container__modal_info__awards}>
+							{awards.map((award, index) => (
+								<p
+									key={award.prize}
+									className={`${s.game__container__modal_info__award} ${
+										index === currentQuestionIndex ? s.active : ''
+									}`}
+								>
+									{formatPrize(award.prize)}
+								</p>
+							))}
+						</div>
+						<div className={s.game__container__modal_info__buttons}>
+							<Button fullWidth onClick={reset}>
+								Retirarse con {formatPrize(awards[currentQuestionIndex].prize)}
+							</Button>
+							<Button fullWidth onClick={nextQuestion} variant="purple">
+								Siguiente pregunta
+							</Button>
+						</div>
+					</ModalContent>
+				</Modal>
+				<Modal noCloseButton open={gameOverMessage !== null}>
+					<ModalHeader>
+						<h2>{gameOverMessage}</h2>
+					</ModalHeader>
+					<ModalContent>
+						<p>¡Inténtalo de nuevo!</p>
+						<div className={s.game__container__modal_info__buttons}>
+							<Button fullWidth onClick={playAgain}>
+								Jugar con las mismas preguntas
+							</Button>
+							<Button fullWidth onClick={reset} variant="purple">
+								Ir al inicio
+							</Button>
+						</div>
+					</ModalContent>
+				</Modal>
 			</section>
+			<img className={s.game__room1} src="/img/room1.png" alt="Estantería" />
+			<img className={s.game__room2} src="/img/room2.png" alt="Ventana" />
+			<img
+				className={s.game__plant}
+				src="/img/plant.png"
+				alt="Planta decorativa"
+			/>
+			<img className={s.game__floor} src="/img/floor.png" alt="Piso" />
 		</main>
 	)
 }

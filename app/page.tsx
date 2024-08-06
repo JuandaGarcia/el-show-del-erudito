@@ -190,13 +190,16 @@ const Home = () => {
 
 		if (questions) {
 			setQuestions(questions)
+			setOpenStartModal(false)
 		} else if (error_message) {
 			setQuestionsError(error_message)
 		}
 	})
 
+	const resetQuestions = () => setQuestions([])
+
 	return questions.length ? (
-		<Game questions={questions} />
+		<Game questions={questions} reset={resetQuestions} />
 	) : (
 		<main className={s.home}>
 			<section className={s.home__content}>
@@ -304,12 +307,12 @@ const Home = () => {
 			</section>
 			<img
 				className={s.home__light}
-				src="/img/light.svg"
+				src="/img/light.png"
 				alt="Luz de la habitación"
 			/>
 			<img
 				className={s.home__plant}
-				src="/img/plant.svg"
+				src="/img/plant.png"
 				alt="Planta decorativa"
 			/>
 			<img

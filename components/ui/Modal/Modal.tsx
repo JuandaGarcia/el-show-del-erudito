@@ -8,12 +8,14 @@ type Props = {
 	open: boolean
 	handleClose?: () => void
 	noBackground?: boolean
+	noCloseButton?: boolean
 }
 const Modal = ({
 	open,
 	handleClose,
 	children,
 	noBackground,
+	noCloseButton,
 }: PropsWithChildren<Props>) => {
 	const modalRef = useRef<HTMLDivElement>(null)
 	const [container, setContainer] = useState<Element | null>()
@@ -51,15 +53,18 @@ const Modal = ({
 						className={`${s.modal__content} ${noBackground && s.no_background}`}
 						ref={modalRef}
 					>
-						<button
-							className={s.modal__content__close}
-							aria-label="Cerrar Modal"
-							onClick={handleClose}
-						>
-							<IoClose />
-						</button>
+						{!noCloseButton && (
+							<button
+								className={s.modal__content__close}
+								aria-label="Cerrar Modal"
+								onClick={handleClose}
+							>
+								<IoClose />
+							</button>
+						)}
 						{children}
 					</div>
+
 					<div className={s.modal__overlay} onClick={handleClose} />
 				</div>,
 				container
