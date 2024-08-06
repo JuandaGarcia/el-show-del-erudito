@@ -16,6 +16,7 @@ import { createQuestions } from 'lib/createQuestions'
 import { Question } from 'utils/schemas/question'
 import Game from 'components/Game/Game'
 
+export const maxDuration = 60
 const Home = () => {
 	const maxLengthSubject = 50
 	const [openHowWorlsModal, setOpenHowWorksModal] = useState(false)

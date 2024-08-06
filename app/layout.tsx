@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 		'Prepárate para desafiar tu conocimiento y divertirte como nunca en este emocionante juego de trivia. En El Show del Erudito, tendrás la oportunidad de poner a prueba tus habilidades mentales con preguntas generadas especialmente para ti, basadas en el tema de tu elección.',
 }
 
-export const maxDuration = 60
 export default function RootLayout({
 	children,
 }: Readonly<{
