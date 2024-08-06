@@ -14,5 +14,5 @@ export const awards = [
 	{ prize: 125000 },
 	{ prize: 250000 },
 	{ prize: 500000 },
-	{ prize: 1000000 },
+	{ prize: 1000000, milestone: true },
 ]

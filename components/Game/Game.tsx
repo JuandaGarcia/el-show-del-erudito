@@ -82,9 +82,14 @@ const Game = ({ questions, reset }: Props) => {
 	const playAgain = () => {
 		setCurrentQuestionIndex(0)
 		setDefaultsToSetQuestion()
+
+		setOpenPhoneCallModal(false)
+		setOpenPublicHelpModal(false)
+
 		setIsPublicHelpAvailable(true)
 		setIsPhoneCallAvailable(true)
 		setIsFiftyFiftyAvailable(true)
+
 		setGameOverMessage(null)
 		setNumberOfTimesPlayed(numberOfTimesPlayed + 1)
 	}
@@ -117,6 +122,14 @@ const Game = ({ questions, reset }: Props) => {
 
 	return (
 		<main className={s.game}>
+			<img className={s.game__floor} src="/img/floor.png" alt="Piso" />
+			<img className={s.game__room1} src="/img/room1.png" alt="Estantería" />
+			<img className={s.game__room2} src="/img/room2.png" alt="Ventana" />
+			<img
+				className={s.game__plant}
+				src="/img/plant.png"
+				alt="Planta decorativa"
+			/>
 			<section className={s.game__container}>
 				<div className={s.game__container__controls}>
 					<Button aria-label="Volver al Inicio" onClick={toggleGoHomeModal}>
@@ -301,15 +314,20 @@ const Game = ({ questions, reset }: Props) => {
 						<h2>¡Correcto! 💸</h2>
 					</ModalHeader>
 					<ModalContent>
-						<h3>Premios</h3>
 						<div className={s.game__container__modal_info__awards}>
 							{awards.map((award, index) => (
 								<p
 									key={award.prize}
-									className={`${s.game__container__modal_info__award} ${
-										index === currentQuestionIndex ? s.active : ''
-									}`}
+									className={`${s.game__container__modal_info__awards__item} ${
+										index === currentQuestionIndex + 1 ? s.active : ''
+									} ${index <= currentQuestionIndex ? s.done : ''}`}
+									style={{ '--delay': `${index * 0.1}s` } as CSSProperties}
 								>
+									<img
+										src="/img/erudito_loader.svg"
+										alt="Nivel actual"
+										className={s.game__container__modal_info__awards__item__img}
+									/>
 									{formatPrize(award.prize)}
 								</p>
 							))}
@@ -341,14 +359,6 @@ const Game = ({ questions, reset }: Props) => {
 					</ModalContent>
 				</Modal>
 			</section>
-			<img className={s.game__room1} src="/img/room1.png" alt="Estantería" />
-			<img className={s.game__room2} src="/img/room2.png" alt="Ventana" />
-			<img
-				className={s.game__plant}
-				src="/img/plant.png"
-				alt="Planta decorativa"
-			/>
-			<img className={s.game__floor} src="/img/floor.png" alt="Piso" />
 		</main>
 	)
 }

@@ -11,7 +11,6 @@
 		max-width: 900px;
 		margin: 0 auto;
 		position: relative;
-		z-index: 2;
 		&__controls {
 			display: flex;
 			justify-content: space-between;
@@ -102,13 +101,51 @@
 		&__modal_info {
 			&__awards {
 				display: grid;
-				grid-template-rows: repeat(5, auto);
+				grid-template-rows: repeat(8, auto);
 				grid-auto-flow: column;
-				width: max-content;
-				margin: 0 auto;
 				column-gap: 2rem;
 				row-gap: 0.5rem;
-				margin-bottom: 1rem;
+				width: max-content;
+				margin: 0 auto;
+				margin-bottom: 2rem;
+				@include desktop {
+					width: 100%;
+					grid-template-rows: repeat(5, auto);
+				}
+				&__item {
+					display: flex;
+					align-items: center;
+					font-weight: 600;
+					gap: 0.2rem;
+					position: relative;
+					@include desktop {
+						font-size: 1.2rem;
+					}
+					&::before {
+						content: '';
+						width: 100%;
+						height: 5px;
+						background: var(--color-success);
+						border-radius: 50%;
+						top: 50%;
+						left: 0;
+						transform: translateY(-50%) rotate(-10deg) scaleX(0);
+						position: absolute;
+						transform-origin: center;
+					}
+					&.done {
+						&::before {
+							animation: level_done 0.5s forwards;
+							animation-delay: var(--delay);
+						}
+					}
+					&.active {
+						animation: level_active 1s infinite;
+					}
+					&__img {
+						width: 1.2rem;
+					}
+				}
 			}
 			&__buttons {
 				display: grid;
@@ -121,7 +158,6 @@
 		left: 0;
 		bottom: 0;
 		width: 50vw;
-		z-index: 1;
 		pointer-events: none;
 		user-select: none;
 		animation: room1 1s ease-in-out;
@@ -135,7 +171,6 @@
 		right: 0;
 		bottom: 0;
 		width: 50vw;
-		z-index: 1;
 		pointer-events: none;
 		user-select: none;
 		animation: room2 1s ease-in-out;
@@ -154,7 +189,7 @@
 		user-select: none;
 		@include desktop {
 			position: fixed;
-			width: inherit;
+			width: initial;
 			height: 40vh;
 			right: 15vw;
 		}
@@ -172,6 +207,27 @@
 
 .remove_events {
 	pointer-events: none;
+}
+
+@keyframes level_done {
+	from {
+		transform: translateY(-50%) rotate(-10deg) scaleX(0);
+	}
+	to {
+		transform: translateY(-50%) rotate(-10deg) scaleX(1);
+	}
+}
+
+@keyframes level_active {
+	0% {
+		transform: scale(0.8);
+	}
+	50% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(0.8);
+	}
 }
 
 @keyframes cat_call {

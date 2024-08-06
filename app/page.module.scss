@@ -93,7 +93,7 @@
 		@include desktop {
 			position: fixed;
 			height: 20vh;
-			width: inherit;
+			width: initial;
 			left: initial;
 			right: 50vw;
 		}
@@ -108,7 +108,7 @@
 		user-select: none;
 		@include desktop {
 			position: fixed;
-			width: inherit;
+			width: initial;
 			height: 40vh;
 			right: 30vw;
 		}
