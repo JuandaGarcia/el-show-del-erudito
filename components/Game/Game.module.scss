@@ -14,10 +14,45 @@
 		max-width: 750px;
 		margin: 0 auto;
 		position: relative;
+		&__intro {
+			display: grid;
+			justify-items: center;
+			padding-top: 5rem;
+			animation: zoom 1s;
+			gap: 2rem;
+			&__title {
+				font-size: 2.5rem;
+				text-align: center;
+			}
+			&__text {
+				text-align: center;
+				font-size: 14px;
+				width: 100%;
+				max-width: 500px;
+			}
+			&__items {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 1rem;
+				font-weight: bold;
+				opacity: 0.2;
+				pointer-events: none;
+				user-select: none;
+			}
+			&__button {
+				width: 100%;
+				max-width: 300px;
+			}
+			&__reset {
+				background: none;
+			}
+		}
 		&__controls {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			animation: zoom 1s;
 			&__countdown {
 				font-size: 1.5rem;
 				&.modal {
@@ -31,6 +66,7 @@
 			grid-template-columns: repeat(3, 1fr);
 			gap: 1rem;
 			margin-bottom: 2rem;
+			animation: zoom 1s;
 			&__button {
 				font-size: 1.2rem;
 				@include desktop {
@@ -39,6 +75,7 @@
 			}
 		}
 		&__content {
+			animation: zoom 1s;
 			&__erudito {
 				display: flex;
 				width: 120px;
@@ -269,6 +306,17 @@
 
 .remove_events {
 	pointer-events: none;
+}
+
+@keyframes zoom {
+	0% {
+		transform: scale(0.8);
+		opacity: 0;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
 }
 
 @keyframes light {

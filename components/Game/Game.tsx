@@ -16,17 +16,19 @@ import { GoHomeFill } from 'react-icons/go'
 import { IoIosPeople } from 'react-icons/io'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import { awards, buttonSelectedAnimationDuration } from 'utils/constants'
+import { PiArrowCircleLeftBold } from 'react-icons/pi'
 
 type Props = {
 	questions: Question[]
 	reset: () => void
+	subject: string
 }
 enum GameOver {
 	None = 0,
 	Time = 1,
 	Answer = 2,
 }
-const Game = ({ questions, reset }: Props) => {
+const Game = ({ questions, reset, subject }: Props) => {
 	/* Game State */
 	const [isStarted, setIsStarted] = useState(false)
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -90,6 +92,7 @@ const Game = ({ questions, reset }: Props) => {
 	}
 
 	const playAgain = () => {
+		setIsStarted(false)
 		setCurrentQuestionIndex(0)
 		setDefaultsToSetQuestion()
 
@@ -143,266 +146,318 @@ const Game = ({ questions, reset }: Props) => {
 				alt="Luz de la habitación"
 			/>
 			<section className={s.game__container}>
-				<div className={s.game__container__controls}>
-					<Button aria-label="Volver al Inicio" onClick={toggleGoHomeModal}>
-						<GoHomeFill />
-					</Button>
-					<div
-						className={`${s.game__container__controls__countdown} ${
-							openPhoneCallModal ||
-							openPublicHelpModal ||
-							gameOverType === GameOver.Time
-								? s.modal
-								: ''
-						}`}
-					>
-						<CountdownCircleTimer
-							key={currentQuestionIndex + numberOfTimesPlayed}
-							isPlaying={answerSelected === null}
-							duration={30}
-							colors={['#86E69B', '#e7b416', '#f57c61']}
-							trailColor="#fff"
-							colorsTime={[30, 10, 0]}
-							strokeWidth={10}
-							size={60}
-							onComplete={() => gameOver(GameOver.Time)}
+				{isStarted ? (
+					<>
+						<div className={s.game__container__controls}>
+							<Button aria-label="Volver al Inicio" onClick={toggleGoHomeModal}>
+								<GoHomeFill />
+							</Button>
+							<div
+								className={`${s.game__container__controls__countdown} ${
+									openPhoneCallModal ||
+									openPublicHelpModal ||
+									gameOverType === GameOver.Time
+										? s.modal
+										: ''
+								}`}
+							>
+								<CountdownCircleTimer
+									key={currentQuestionIndex + numberOfTimesPlayed}
+									isPlaying={answerSelected === null}
+									duration={30}
+									colors={['#86E69B', '#e7b416', '#f57c61']}
+									trailColor="#fff"
+									colorsTime={[30, 10, 0]}
+									strokeWidth={10}
+									size={60}
+									onComplete={() => gameOver(GameOver.Time)}
+								>
+									{({ remainingTime }) => (
+										<span className={`${bebasNeue.className}`}>
+											{remainingTime}
+										</span>
+									)}
+								</CountdownCircleTimer>
+							</div>
+						</div>
+						<div className={s.game__container__wildcards}>
+							<Button
+								fullWidth
+								title="Ayuda del público"
+								aria-label="Ayuda del público"
+								onClick={publicHelp}
+								disabled={!isPublicHelpAvailable}
+								className={buttonEvents}
+							>
+								<IoIosPeople />
+							</Button>
+							<Button
+								fullWidth
+								title="Llamar a un amigo"
+								aria-label="Llamar a un amigo"
+								onClick={phoneCall}
+								disabled={!isPhoneCallAvailable}
+								className={buttonEvents}
+							>
+								<MdPhone />
+							</Button>
+							<Button
+								fullWidth
+								title="50 : 50"
+								onClick={fiftyFifty}
+								disabled={!isFiftyFiftyAvailable}
+								className={`${s.game__container__wildcards__button} ${buttonEvents}`}
+							>
+								50 : 50
+							</Button>
+						</div>
+						<div className={s.game__container__content}>
+							<img
+								src="/img/show.png"
+								alt="El erudito preguntando"
+								width={120}
+								height={173}
+								className={s.game__container__content__erudito}
+							/>
+							<h1 className={s.game__container__content__question}>
+								{currentQuestion.question}
+							</h1>
+							<ul className={s.game__container__content__list}>
+								{currentOptions.map(([key, value]) => (
+									<li key={key}>
+										<Button
+											fullWidth
+											onClick={() => selectAnswer(key)}
+											disabled={isDisabled(key)}
+											data-correct={
+												answerSelected && currentQuestion.correct_answer === key
+											}
+											className={`${s.game__container__content__list__button} ${
+												answerSelected === key ? s.selected : ''
+											}  ${buttonEvents}`}
+											style={
+												{
+													'--answer-color':
+														key === currentQuestion.correct_answer
+															? 'var(--color-success)'
+															: 'var(--color-error)',
+													'--animation-duration': `${buttonSelectedAnimationDuration}ms`,
+												} as CSSProperties
+											}
+										>
+											{key}: {value}
+										</Button>
+									</li>
+								))}
+							</ul>
+						</div>
+						<Modal
+							noBackground
+							noCloseButton
+							open={openPublicHelpModal}
+							handleClose={closePublicHelpModal}
 						>
-							{({ remainingTime }) => (
-								<span className={`${bebasNeue.className}`}>
-									{remainingTime}
-								</span>
-							)}
-						</CountdownCircleTimer>
-					</div>
-				</div>
-				<div className={s.game__container__wildcards}>
-					<Button
-						fullWidth
-						title="Ayuda del público"
-						aria-label="Ayuda del público"
-						onClick={publicHelp}
-						disabled={!isPublicHelpAvailable}
-						className={buttonEvents}
-					>
-						<IoIosPeople />
-					</Button>
-					<Button
-						fullWidth
-						title="Llamar a un amigo"
-						aria-label="Llamar a un amigo"
-						onClick={phoneCall}
-						disabled={!isPhoneCallAvailable}
-						className={buttonEvents}
-					>
-						<MdPhone />
-					</Button>
-					<Button
-						fullWidth
-						title="50 : 50"
-						onClick={fiftyFifty}
-						disabled={!isFiftyFiftyAvailable}
-						className={`${s.game__container__wildcards__button} ${buttonEvents}`}
-					>
-						50 : 50
-					</Button>
-				</div>
-				<div className={s.game__container__content}>
-					<img
-						src="/img/show.png"
-						alt="El erudito preguntando"
-						className={s.game__container__content__erudito}
-					/>
-					<h1 className={s.game__container__content__question}>
-						{currentQuestion.question}
-					</h1>
-					<ul className={s.game__container__content__list}>
-						{currentOptions.map(([key, value]) => (
-							<li key={key}>
-								<Button
-									fullWidth
-									onClick={() => selectAnswer(key)}
-									disabled={isDisabled(key)}
-									data-correct={
-										answerSelected && currentQuestion.correct_answer === key
-									}
-									className={`${s.game__container__content__list__button} ${
-										answerSelected === key ? s.selected : ''
-									}  ${buttonEvents}`}
-									style={
-										{
-											'--answer-color':
-												key === currentQuestion.correct_answer
-													? 'var(--color-success)'
-													: 'var(--color-error)',
-											'--animation-duration': `${buttonSelectedAnimationDuration}ms`,
-										} as CSSProperties
-									}
-								>
-									{key}: {value}
-								</Button>
-							</li>
-						))}
-					</ul>
-				</div>
-				<Modal
-					noBackground
-					noCloseButton
-					open={openPublicHelpModal}
-					handleClose={closePublicHelpModal}
-				>
-					<div className={s.game__container__modal}>
-						<h2 className={s.game__container__modal__title}>
-							¡Ayuda del público!
-						</h2>
-						<div className={s.game__container__modal__imgs}>
-							<PublicHelpChart
-								answer={currentQuestion.correct_answer}
-								className={s.game__container__modal__imgs__chart}
-							/>
-							<img
-								src="/img/cat.png"
-								alt="El gato erudito"
-								width={160}
-								height={149}
-								className={s.game__container__modal__imgs__cat_help_1}
-							/>
-							<img
-								src="/img/mac.png"
-								alt="Mac"
-								width={116}
-								height={135}
-								className={s.game__container__modal__imgs__mac}
-							/>
-						</div>
-						<p className={s.game__container__modal__message}>
-							El público ha votado y la opción más votada es la{' '}
-							<span className={s.game__container__modal__message__answer}>
-								{currentQuestion.correct_answer}
-							</span>
-						</p>
-						<Button fullWidth onClick={closePublicHelpModal}>
-							Continuar
-						</Button>
-					</div>
-				</Modal>
-				<Modal
-					noBackground
-					noCloseButton
-					open={openPhoneCallModal}
-					handleClose={closePhoneCallModal}
-				>
-					<div className={s.game__container__modal}>
-						<h2 className={s.game__container__modal__title}>
-							¿Qué dice tu amigo?
-						</h2>
-						<div className={s.game__container__modal__imgs}>
-							<PhoneIcon />
-							<img
-								src="/img/cat.png"
-								alt="El gato erudito"
-								width={160}
-								height={149}
-								className={s.game__container__modal__imgs__cat_call}
-							/>
-						</div>
-						<p className={s.game__container__modal__message}>
-							&quot;Yo creo que la respuesta correcta es la opción{' '}
-							<span className={s.game__container__modal__message__answer}>
-								{currentQuestion.correct_answer}
-							</span>
-							&quot;
-						</p>
-						<Button fullWidth onClick={closePhoneCallModal}>
-							Continuar
-						</Button>
-					</div>
-				</Modal>
-				<Modal open={openGoHomeModal} handleClose={toggleGoHomeModal}>
-					<ModalHeader>
-						<h2>¿Estás seguro que quieres salir?</h2>
-					</ModalHeader>
-					<ModalContent>
-						<p>Si sales, perderás todo tu progreso</p>
-					</ModalContent>
-					<ModalFooter>
-						<Button fullWidth onClick={reset}>
-							Salir
-						</Button>
-					</ModalFooter>
-				</Modal>
-				<Modal open={openSuccessModal} handleClose={nextQuestion}>
-					<ModalHeader>
-						<h2>¡Subiste de nivel! 💸</h2>
-					</ModalHeader>
-					<ModalContent>
-						<div className={s.game__container__modal_info__awards}>
-							{awards.map((award, index) => (
-								<p
-									key={award.prize}
-									className={`${s.game__container__modal_info__awards__item} ${
-										index === currentQuestionIndex + 1 ? s.active : ''
-									} ${index <= currentQuestionIndex ? s.done : ''}`}
-									style={{ '--delay': `${index * 0.1}s` } as CSSProperties}
-								>
-									<img
-										src={
-											award.milestone
-												? '/img/erudito2.svg'
-												: '/img/erudito_loader.svg'
-										}
-										alt="Nivel actual"
-										className={s.game__container__modal_info__awards__item__img}
+							<div className={s.game__container__modal}>
+								<h2 className={s.game__container__modal__title}>
+									¡Ayuda del público!
+								</h2>
+								<div className={s.game__container__modal__imgs}>
+									<PublicHelpChart
+										answer={currentQuestion.correct_answer}
+										className={s.game__container__modal__imgs__chart}
 									/>
-									{formatPrize(award.prize)}
+									<img
+										src="/img/cat.png"
+										alt="El gato erudito"
+										width={160}
+										height={149}
+										className={s.game__container__modal__imgs__cat_help_1}
+									/>
+									<img
+										src="/img/mac.png"
+										alt="Mac"
+										width={116}
+										height={135}
+										className={s.game__container__modal__imgs__mac}
+									/>
+								</div>
+								<p className={s.game__container__modal__message}>
+									El público ha votado y la opción más votada es la{' '}
+									<span className={s.game__container__modal__message__answer}>
+										{currentQuestion.correct_answer}
+									</span>
 								</p>
-							))}
-						</div>
-						<p className={s.game__container__modal_info__text}>
-							Aún no tienes nada asegurado. Si te retiras ahora, te llevas $100.
-							Si continúas, podrías ganar $200. ¡Pero cuidado, podrías irte con
-							las manos vacías!
+								<Button fullWidth onClick={closePublicHelpModal}>
+									Continuar
+								</Button>
+							</div>
+						</Modal>
+						<Modal
+							noBackground
+							noCloseButton
+							open={openPhoneCallModal}
+							handleClose={closePhoneCallModal}
+						>
+							<div className={s.game__container__modal}>
+								<h2 className={s.game__container__modal__title}>
+									¿Qué dice tu amigo?
+								</h2>
+								<div className={s.game__container__modal__imgs}>
+									<PhoneIcon />
+									<img
+										src="/img/cat.png"
+										alt="El gato erudito"
+										width={160}
+										height={149}
+										className={s.game__container__modal__imgs__cat_call}
+									/>
+								</div>
+								<p className={s.game__container__modal__message}>
+									&quot;Yo creo que la respuesta correcta es la opción{' '}
+									<span className={s.game__container__modal__message__answer}>
+										{currentQuestion.correct_answer}
+									</span>
+									&quot;
+								</p>
+								<Button fullWidth onClick={closePhoneCallModal}>
+									Continuar
+								</Button>
+							</div>
+						</Modal>
+						<Modal open={openGoHomeModal} handleClose={toggleGoHomeModal}>
+							<ModalHeader>
+								<h2>¿Estás seguro que quieres salir?</h2>
+							</ModalHeader>
+							<ModalContent>
+								<p>Si sales, perderás todo tu progreso</p>
+							</ModalContent>
+							<ModalFooter>
+								<Button fullWidth onClick={reset}>
+									Salir
+								</Button>
+							</ModalFooter>
+						</Modal>
+						<Modal open={openSuccessModal} handleClose={nextQuestion}>
+							<ModalHeader>
+								<h2>¡Subiste de nivel! 💸</h2>
+							</ModalHeader>
+							<ModalContent>
+								<div className={s.game__container__modal_info__awards}>
+									{awards.map((award, index) => (
+										<p
+											key={award.prize}
+											className={`${
+												s.game__container__modal_info__awards__item
+											} ${index === currentQuestionIndex + 1 ? s.active : ''} ${
+												index <= currentQuestionIndex ? s.done : ''
+											}`}
+											style={{ '--delay': `${index * 0.1}s` } as CSSProperties}
+										>
+											<img
+												src={
+													award.milestone
+														? '/img/erudito2.svg'
+														: '/img/erudito_loader.svg'
+												}
+												alt="Nivel actual"
+												className={
+													s.game__container__modal_info__awards__item__img
+												}
+											/>
+											{formatPrize(award.prize)}
+										</p>
+									))}
+								</div>
+								<p className={s.game__container__modal_info__text}>
+									Aún no tienes nada asegurado. Si te retiras ahora, te llevas
+									$100. Si continúas, podrías ganar $200. ¡Pero cuidado, podrías
+									irte con las manos vacías!
+								</p>
+								<div className={s.game__container__modal_info__buttons}>
+									<Button fullWidth onClick={reset}>
+										Retirarse con{' '}
+										{formatPrize(awards[currentQuestionIndex].prize)}
+									</Button>
+									<Button fullWidth onClick={nextQuestion} variant="purple">
+										Siguiente pregunta
+									</Button>
+								</div>
+							</ModalContent>
+						</Modal>
+						<Modal
+							noBackground
+							noCloseButton
+							open={gameOverType !== GameOver.None}
+						>
+							<div className={s.game__container__modal}>
+								<h2 className={s.game__container__modal__title}>Game Over</h2>
+								{gameOverType === GameOver.Time ? (
+									<img
+										src="/img/timer.png"
+										alt="Timer"
+										width={224}
+										height={125}
+										className={s.game__container__modal__time}
+									/>
+								) : (
+									<img
+										src="/img/egg.svg"
+										alt="Huevo"
+										width={200}
+										height={86}
+										className={s.game__container__modal__egg}
+									/>
+								)}
+								<p className={s.game__container__modal__title}>
+									{gameOverType === GameOver.Time
+										? '¡Se acabó el tiempo! 😢'
+										: '¡Has perdido! 😢'}
+								</p>
+								<div className={s.game__container__modal__buttons}>
+									<Button fullWidth onClick={playAgain}>
+										Jugar de nuevo con las mismas preguntas
+									</Button>
+									<Button fullWidth onClick={reset} variant="purple">
+										Ir al inicio
+									</Button>
+								</div>
+							</div>
+						</Modal>
+					</>
+				) : (
+					<div className={s.game__container__intro}>
+						<img width={226} height={182} src="/img/cloud.png" alt="Intro" />
+						<h1
+							className={`${bebasNeue.className} ${s.game__container__intro__title}`}
+						>
+							{subject}
+						</h1>
+						<p className={s.game__container__intro__text}>
+							A medida que respondas correctamente, avanzarás a preguntas más
+							difíciles y acumularás puntos. Puedes usar los comodines “50:50”,
+							“Llamada a un amigo” y “Ayuda del Público” para recibir asistencia
+							cuando lo necesites.
 						</p>
-						<div className={s.game__container__modal_info__buttons}>
-							<Button fullWidth onClick={reset}>
-								Retirarse con {formatPrize(awards[currentQuestionIndex].prize)}
-							</Button>
-							<Button fullWidth onClick={nextQuestion} variant="purple">
-								Siguiente pregunta
-							</Button>
+						<div className={s.game__container__intro__items}>
+							<IoIosPeople size={32} />
+							<MdPhone size={32} />
+							<span>50 : 50</span>
 						</div>
-					</ModalContent>
-				</Modal>
-				<Modal noBackground noCloseButton open={gameOverType !== GameOver.None}>
-					<div className={s.game__container__modal}>
-						<h2 className={s.game__container__modal__title}>Game Over</h2>
-						{gameOverType === GameOver.Time ? (
-							<img
-								src="/img/timer.png"
-								alt="Timer"
-								className={s.game__container__modal__time}
-							/>
-						) : (
-							<img
-								src="/img/egg.svg"
-								alt="Huevo"
-								className={s.game__container__modal__egg}
-							/>
-						)}
-						<p className={s.game__container__modal__title}>
-							{gameOverType === GameOver.Time
-								? '¡Se acabó el tiempo! 😢'
-								: '¡Has perdido! 😢'}
-						</p>
-						<div className={s.game__container__modal__buttons}>
-							<Button fullWidth onClick={playAgain}>
-								Jugar de nuevo con las mismas preguntas
-							</Button>
-							<Button fullWidth onClick={reset} variant="purple">
-								Ir al inicio
-							</Button>
-						</div>
+						<Button
+							onClick={startGame}
+							className={s.game__container__intro__button}
+						>
+							Jugar
+						</Button>
+						<button
+							aria-label="Volver al inicio"
+							className={s.game__container__intro__reset}
+							onClick={reset}
+						>
+							<PiArrowCircleLeftBold size={32} />
+						</button>
 					</div>
-				</Modal>
+				)}
 			</section>
 		</main>
 	)

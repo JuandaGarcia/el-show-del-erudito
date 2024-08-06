@@ -27,7 +27,9 @@ const Home = () => {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
+		watch,
 	} = useForm<{ subject: string }>()
+	const subject = watch('subject')
 
 	const toggleOpenHowWorksModal = () => setOpenHowWorksModal(!openHowWorlsModal)
 	const toggleStartModal = () => setOpenStartModal(!openStartModal)
@@ -46,11 +48,14 @@ const Home = () => {
 	const resetQuestions = () => setQuestions([])
 
 	return questions.length ? (
-		<Game questions={questions} reset={resetQuestions} />
+		<Game questions={questions} reset={resetQuestions} subject={subject} />
 	) : (
 		<main className={s.home}>
 			<section className={s.home__content}>
-				<Logo className={s.home__content__logo} />
+				<Logo
+					className={s.home__content__logo}
+					aria-label="El Show del Erudito, juego de preguntas"
+				/>
 				<p className={s.home__content__text}>
 					¡Prepárate para una experiencia de trivia única y emocionante,
 					inspirada en el icónico “Quién quiere ser millonario”! En El Show del
