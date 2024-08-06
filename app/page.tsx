@@ -295,7 +295,7 @@ const Home = () => {
 											alt="Cargando"
 											className={s.home__content__start__button__loader}
 										/>{' '}
-										Generando preguntas...
+										Esperando sabiduría...
 									</>
 								) : (
 									'¡Comenzar!'

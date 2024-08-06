@@ -21,6 +21,11 @@ type Props = {
 	questions: Question[]
 	reset: () => void
 }
+enum GameOver {
+	None = 0,
+	Time = 1,
+	Answer = 2,
+}
 const Game = ({ questions, reset }: Props) => {
 	/* Game State */
 	const [isStarted, setIsStarted] = useState(false)
@@ -31,23 +36,22 @@ const Game = ({ questions, reset }: Props) => {
 	const [disabledOptions, setDisabledOptions] = useState<string[]>([])
 	const [answerSelected, setAnswerSelected] = useState<string | null>(null)
 	const [numberOfTimesPlayed, setNumberOfTimesPlayed] = useState(0)
-
-	/* Values */
-	const currentQuestion = questions[currentQuestionIndex]
-	const currentOptions = Object.entries(currentQuestion.options)
-	const buttonEvents = answerSelected ? s.remove_events : ''
+	const [gameOverType, setGameOverType] = useState<GameOver>(GameOver.None)
 
 	/* Modals */
 	const [openPublicHelpModal, setOpenPublicHelpModal] = useState(false)
 	const [openPhoneCallModal, setOpenPhoneCallModal] = useState(false)
 	const [openGoHomeModal, setOpenGoHomeModal] = useState(false)
 	const [openSuccessModal, setOpenSuccessModal] = useState(false)
-	const [gameOverMessage, setGameOverMessage] = useState<string | null>(null)
+
+	/* Values */
+	const currentQuestion = questions[currentQuestionIndex]
+	const currentOptions = Object.entries(currentQuestion.options)
+	const buttonEvents = answerSelected ? s.remove_events : ''
 
 	const startGame = () => setIsStarted(true)
 	const isDisabled = (key: string) => disabledOptions.includes(key)
 	const toggleGoHomeModal = () => setOpenGoHomeModal(!openGoHomeModal)
-	const onCompleteCountdown = () => setGameOverMessage('¡Se acabó el tiempo!')
 	const formatPrize = (prize: number) => `$${prize.toLocaleString()}`
 
 	const selectAnswer = (answer: string) => {
@@ -63,9 +67,15 @@ const Game = ({ questions, reset }: Props) => {
 					colors: ['#5608d2'],
 				})
 			} else {
-				setGameOverMessage('¡Has perdido!')
+				setGameOverType(GameOver.Answer)
 			}
-		}, buttonSelectedAnimationDuration + 500)
+		}, buttonSelectedAnimationDuration + 700)
+	}
+
+	const gameOver = (type: GameOver.Answer | GameOver.Time) => {
+		setOpenPhoneCallModal(false)
+		setOpenPublicHelpModal(false)
+		setGameOverType(type)
 	}
 
 	const setDefaultsToSetQuestion = () => {
@@ -83,14 +93,11 @@ const Game = ({ questions, reset }: Props) => {
 		setCurrentQuestionIndex(0)
 		setDefaultsToSetQuestion()
 
-		setOpenPhoneCallModal(false)
-		setOpenPublicHelpModal(false)
-
 		setIsPublicHelpAvailable(true)
 		setIsPhoneCallAvailable(true)
 		setIsFiftyFiftyAvailable(true)
 
-		setGameOverMessage(null)
+		setGameOverType(GameOver.None)
 		setNumberOfTimesPlayed(numberOfTimesPlayed + 1)
 	}
 
@@ -130,6 +137,11 @@ const Game = ({ questions, reset }: Props) => {
 				src="/img/plant.png"
 				alt="Planta decorativa"
 			/>
+			<img
+				className={s.game__light}
+				src="/img/light.png"
+				alt="Luz de la habitación"
+			/>
 			<section className={s.game__container}>
 				<div className={s.game__container__controls}>
 					<Button aria-label="Volver al Inicio" onClick={toggleGoHomeModal}>
@@ -137,7 +149,11 @@ const Game = ({ questions, reset }: Props) => {
 					</Button>
 					<div
 						className={`${s.game__container__controls__countdown} ${
-							openPhoneCallModal || openPublicHelpModal ? s.modal : ''
+							openPhoneCallModal ||
+							openPublicHelpModal ||
+							gameOverType === GameOver.Time
+								? s.modal
+								: ''
 						}`}
 					>
 						<CountdownCircleTimer
@@ -149,7 +165,7 @@ const Game = ({ questions, reset }: Props) => {
 							colorsTime={[30, 10, 0]}
 							strokeWidth={10}
 							size={60}
-							onComplete={onCompleteCountdown}
+							onComplete={() => gameOver(GameOver.Time)}
 						>
 							{({ remainingTime }) => (
 								<span className={`${bebasNeue.className}`}>
@@ -191,6 +207,11 @@ const Game = ({ questions, reset }: Props) => {
 					</Button>
 				</div>
 				<div className={s.game__container__content}>
+					<img
+						src="/img/show.png"
+						alt="El erudito preguntando"
+						className={s.game__container__content__erudito}
+					/>
 					<h1 className={s.game__container__content__question}>
 						{currentQuestion.question}
 					</h1>
@@ -229,33 +250,33 @@ const Game = ({ questions, reset }: Props) => {
 					open={openPublicHelpModal}
 					handleClose={closePublicHelpModal}
 				>
-					<div className={s.game__container__public_help}>
-						<h2 className={s.game__container__public_help__title}>
+					<div className={s.game__container__modal}>
+						<h2 className={s.game__container__modal__title}>
 							¡Ayuda del público!
 						</h2>
-						<div className={s.game__container__public_help__imgs}>
+						<div className={s.game__container__modal__imgs}>
 							<PublicHelpChart
 								answer={currentQuestion.correct_answer}
-								className={s.game__container__public_help__imgs__chart}
+								className={s.game__container__modal__imgs__chart}
 							/>
 							<img
 								src="/img/cat.png"
 								alt="El gato erudito"
 								width={160}
 								height={149}
-								className={s.game__container__phone_call__imgs__cat_help_1}
+								className={s.game__container__modal__imgs__cat_help_1}
 							/>
 							<img
 								src="/img/mac.png"
 								alt="Mac"
 								width={116}
 								height={135}
-								className={s.game__container__phone_call__imgs__mac}
+								className={s.game__container__modal__imgs__mac}
 							/>
 						</div>
-						<p className={s.game__container__public_help__message}>
+						<p className={s.game__container__modal__message}>
 							El público ha votado y la opción más votada es la{' '}
-							<span className={s.game__container__public_help__message__answer}>
+							<span className={s.game__container__modal__message__answer}>
 								{currentQuestion.correct_answer}
 							</span>
 						</p>
@@ -270,23 +291,23 @@ const Game = ({ questions, reset }: Props) => {
 					open={openPhoneCallModal}
 					handleClose={closePhoneCallModal}
 				>
-					<div className={s.game__container__phone_call}>
-						<h2 className={s.game__container__phone_call__title}>
+					<div className={s.game__container__modal}>
+						<h2 className={s.game__container__modal__title}>
 							¿Qué dice tu amigo?
 						</h2>
-						<div className={s.game__container__phone_call__imgs}>
+						<div className={s.game__container__modal__imgs}>
 							<PhoneIcon />
 							<img
 								src="/img/cat.png"
 								alt="El gato erudito"
 								width={160}
 								height={149}
-								className={s.game__container__phone_call__imgs__cat_call}
+								className={s.game__container__modal__imgs__cat_call}
 							/>
 						</div>
-						<p className={s.game__container__phone_call__message}>
+						<p className={s.game__container__modal__message}>
 							&quot;Yo creo que la respuesta correcta es la opción{' '}
-							<span className={s.game__container__phone_call__message__answer}>
+							<span className={s.game__container__modal__message__answer}>
 								{currentQuestion.correct_answer}
 							</span>
 							&quot;
@@ -311,7 +332,7 @@ const Game = ({ questions, reset }: Props) => {
 				</Modal>
 				<Modal open={openSuccessModal} handleClose={nextQuestion}>
 					<ModalHeader>
-						<h2>¡Correcto! 💸</h2>
+						<h2>¡Subiste de nivel! 💸</h2>
 					</ModalHeader>
 					<ModalContent>
 						<div className={s.game__container__modal_info__awards}>
@@ -324,7 +345,11 @@ const Game = ({ questions, reset }: Props) => {
 									style={{ '--delay': `${index * 0.1}s` } as CSSProperties}
 								>
 									<img
-										src="/img/erudito_loader.svg"
+										src={
+											award.milestone
+												? '/img/erudito2.svg'
+												: '/img/erudito_loader.svg'
+										}
 										alt="Nivel actual"
 										className={s.game__container__modal_info__awards__item__img}
 									/>
@@ -332,6 +357,11 @@ const Game = ({ questions, reset }: Props) => {
 								</p>
 							))}
 						</div>
+						<p className={s.game__container__modal_info__text}>
+							Aún no tienes nada asegurado. Si te retiras ahora, te llevas $100.
+							Si continúas, podrías ganar $200. ¡Pero cuidado, podrías irte con
+							las manos vacías!
+						</p>
 						<div className={s.game__container__modal_info__buttons}>
 							<Button fullWidth onClick={reset}>
 								Retirarse con {formatPrize(awards[currentQuestionIndex].prize)}
@@ -342,21 +372,36 @@ const Game = ({ questions, reset }: Props) => {
 						</div>
 					</ModalContent>
 				</Modal>
-				<Modal noCloseButton open={gameOverMessage !== null}>
-					<ModalHeader>
-						<h2>{gameOverMessage}</h2>
-					</ModalHeader>
-					<ModalContent>
-						<p>¡Inténtalo de nuevo!</p>
-						<div className={s.game__container__modal_info__buttons}>
+				<Modal noBackground noCloseButton open={gameOverType !== GameOver.None}>
+					<div className={s.game__container__modal}>
+						<h2 className={s.game__container__modal__title}>Game Over</h2>
+						{gameOverType === GameOver.Time ? (
+							<img
+								src="/img/timer.png"
+								alt="Timer"
+								className={s.game__container__modal__time}
+							/>
+						) : (
+							<img
+								src="/img/egg.svg"
+								alt="Huevo"
+								className={s.game__container__modal__egg}
+							/>
+						)}
+						<p className={s.game__container__modal__title}>
+							{gameOverType === GameOver.Time
+								? '¡Se acabó el tiempo! 😢'
+								: '¡Has perdido! 😢'}
+						</p>
+						<div className={s.game__container__modal__buttons}>
 							<Button fullWidth onClick={playAgain}>
-								Jugar con las mismas preguntas
+								Jugar de nuevo con las mismas preguntas
 							</Button>
 							<Button fullWidth onClick={reset} variant="purple">
 								Ir al inicio
 							</Button>
 						</div>
-					</ModalContent>
+					</div>
 				</Modal>
 			</section>
 		</main>

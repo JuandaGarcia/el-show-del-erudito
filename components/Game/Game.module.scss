@@ -1,14 +1,17 @@
 @import './../../styles/mixins/responsive';
+@import './../../styles/mixins/neobrutalism-item';
 
 .game {
 	background: var(--background);
 	min-height: 100vh;
 	&__container {
 		display: grid;
+		grid-auto-rows: max-content;
 		gap: 1rem;
 		padding: 2rem;
+		min-height: 100vh;
 		width: 100%;
-		max-width: 900px;
+		max-width: 750px;
 		margin: 0 auto;
 		position: relative;
 		&__controls {
@@ -27,11 +30,32 @@
 			display: grid;
 			grid-template-columns: repeat(3, 1fr);
 			gap: 1rem;
+			margin-bottom: 2rem;
 			&__button {
-				white-space: nowrap;
+				font-size: 1.2rem;
+				@include desktop {
+					font-size: 1.5rem;
+				}
 			}
 		}
 		&__content {
+			&__erudito {
+				display: flex;
+				width: 120px;
+				vertical-align: top;
+				margin: 0 auto;
+				pointer-events: none;
+				user-select: none;
+			}
+			&__question {
+				@include neo-brutalism-item;
+				font-size: 1.5rem;
+				margin-bottom: 2rem;
+				text-align: center;
+				border-radius: 5px;
+				width: 100%;
+				padding: 2rem;
+			}
 			&__list {
 				list-style: none;
 				display: grid;
@@ -40,6 +64,7 @@
 					grid-template-columns: 1fr 1fr;
 				}
 				&__button {
+					height: 100%;
 					&[data-correct='true'] {
 						animation: button_correct var(--animation-duration) forwards;
 					}
@@ -49,14 +74,23 @@
 				}
 			}
 		}
-		&__phone_call,
-		&__public_help {
+		&__modal {
 			text-align: center;
 			color: #fff;
 			padding: 2rem 0;
 			&__title {
 				font-size: 1.5rem;
 				margin-bottom: 2rem;
+			}
+			&__egg {
+				width: 200px;
+				margin-bottom: 2rem;
+				pointer-events: none;
+				user-select: none;
+			}
+			&__time {
+				pointer-events: none;
+				user-select: none;
 			}
 			&__imgs {
 				display: grid;
@@ -81,6 +115,8 @@
 					top: 4rem;
 					transform: rotate(45deg);
 					animation: mac_help 2s infinite;
+					pointer-events: none;
+					user-select: none;
 				}
 				&__cat_call,
 				&__cat_help_1 {
@@ -97,6 +133,10 @@
 					font-weight: bold;
 				}
 			}
+			&__buttons {
+				display: grid;
+				gap: 1rem;
+			}
 		}
 		&__modal_info {
 			&__awards {
@@ -107,9 +147,10 @@
 				row-gap: 0.5rem;
 				width: max-content;
 				margin: 0 auto;
-				margin-bottom: 2rem;
+				margin-bottom: 1rem;
 				@include desktop {
 					width: 100%;
+					column-gap: 1rem;
 					grid-template-rows: repeat(5, auto);
 				}
 				&__item {
@@ -146,6 +187,11 @@
 						width: 1.2rem;
 					}
 				}
+			}
+			&__text {
+				font-size: 0.875rem;
+				margin-bottom: 1rem;
+				text-align: center;
 			}
 			&__buttons {
 				display: grid;
@@ -194,6 +240,22 @@
 			right: 15vw;
 		}
 	}
+	&__light {
+		position: absolute;
+		top: 0;
+		left: 2rem;
+		width: 5rem;
+		animation: light 1s ease-in-out;
+		pointer-events: none;
+		user-select: none;
+		@include desktop {
+			position: fixed;
+			height: 20vh;
+			width: initial;
+			left: initial;
+			left: 20vw;
+		}
+	}
 	&__floor {
 		position: absolute;
 		bottom: 0;
@@ -207,6 +269,17 @@
 
 .remove_events {
 	pointer-events: none;
+}
+
+@keyframes light {
+	from {
+		transform: translateY(-100%) rotate(90deg);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0) rotate(0);
+		opacity: 1;
+	}
 }
 
 @keyframes level_done {
