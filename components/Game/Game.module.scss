@@ -6,7 +6,7 @@
 	min-height: 100vh;
 	&__container {
 		display: grid;
-		grid-auto-rows: max-content;
+		grid-template-columns: 1fr;
 		gap: 1rem;
 		padding: 2rem;
 		min-height: 100vh;
@@ -14,15 +14,20 @@
 		max-width: 750px;
 		margin: 0 auto;
 		position: relative;
+		place-content: center;
 		&__intro {
 			display: grid;
 			justify-items: center;
-			padding-top: 5rem;
-			animation: zoom 1s;
+			animation: zoomIn 1s;
 			gap: 2rem;
+			align-self: center;
 			&__title {
 				font-size: 2.5rem;
 				text-align: center;
+			}
+			&__img {
+				pointer-events: none;
+				user-select: none;
 			}
 			&__text {
 				text-align: center;
@@ -52,7 +57,7 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			animation: zoom 1s;
+			animation: zoomIn 1s;
 			&__awards {
 				display: flex;
 				flex-direction: column;
@@ -81,7 +86,7 @@
 			grid-template-columns: repeat(3, 1fr);
 			gap: 1rem;
 			margin-bottom: 2rem;
-			animation: zoom 1s;
+			animation: zoomIn 1s;
 			&__button {
 				font-size: 1.2rem;
 				@include desktop {
@@ -90,10 +95,9 @@
 			}
 		}
 		&__content {
-			animation: zoom 1s;
+			animation: zoomIn 1s;
 			&__erudito {
 				display: flex;
-				width: 120px;
 				vertical-align: top;
 				margin: 0 auto;
 				pointer-events: none;
@@ -336,7 +340,7 @@
 	pointer-events: none;
 }
 
-@keyframes zoom {
+@keyframes zoomIn {
 	0% {
 		transform: scale(0.8);
 		opacity: 0;

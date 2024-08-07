@@ -46,7 +46,6 @@ const Game = ({ questions, reset, subject }: Props) => {
 	/* Modals */
 	const [openPublicHelpModal, setOpenPublicHelpModal] = useState(false)
 	const [openPhoneCallModal, setOpenPhoneCallModal] = useState(false)
-	const [openGoHomeModal, setOpenGoHomeModal] = useState(false)
 	const [openSuccessModal, setOpenSuccessModal] = useState(false)
 
 	/* Values */
@@ -57,25 +56,28 @@ const Game = ({ questions, reset, subject }: Props) => {
 
 	const startGame = () => setIsStarted(true)
 	const isDisabled = (key: string) => disabledOptions.includes(key)
-	const toggleGoHomeModal = () => setOpenGoHomeModal(!openGoHomeModal)
-	const formatPrize = (prize: number) => `$${prize.toLocaleString()}`
+	const formatPrize = (prize: number) => `$${prize?.toLocaleString()}`
 
 	const selectAnswer = (answer: string) => {
 		setAnswerSelected(answer)
 		// Await for the button animation
 		setTimeout(() => {
 			if (answer === currentQuestion.correct_answer) {
-				if (currentAward.milestone) {
-					setSecuredMoney(currentAward.prize)
+				if (questions.length === currentQuestionIndex + 1) {
+					setGameOverType(GameOver.Withdraw)
+				} else {
+					if (currentAward.milestone) {
+						setSecuredMoney(currentAward.prize)
+					}
+					setRealIndex(currentQuestionIndex + 1)
+					setOpenSuccessModal(true)
+					confetti({
+						particleCount: 25,
+						spread: 70,
+						origin: { y: 0.6 },
+						colors: ['#5608d2'],
+					})
 				}
-				setRealIndex(currentQuestionIndex + 1)
-				setOpenSuccessModal(true)
-				confetti({
-					particleCount: 25,
-					spread: 70,
-					origin: { y: 0.6 },
-					colors: ['#5608d2'],
-				})
 			} else {
 				setGameOverType(GameOver.Answer)
 			}
@@ -161,7 +163,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 			<section className={s.game__container}>
 				{isStarted ? (
 					<>
-						<div className={s.game__container__controls}>
+						<div className={s.game__container__controls} key={1}>
 							<Button
 								aria-label="Volver al Inicio"
 								onClick={() => gameOver(GameOver.Withdraw)}
@@ -360,19 +362,6 @@ const Game = ({ questions, reset, subject }: Props) => {
 								</Button>
 							</div>
 						</Modal>
-						<Modal open={openGoHomeModal} handleClose={toggleGoHomeModal}>
-							<ModalHeader>
-								<h2>¿Estás seguro que quieres salir?</h2>
-							</ModalHeader>
-							<ModalContent>
-								<p>Si sales, perderás todo tu progreso</p>
-							</ModalContent>
-							<ModalFooter>
-								<Button fullWidth onClick={reset}>
-									Salir
-								</Button>
-							</ModalFooter>
-						</Modal>
 						<Modal open={openSuccessModal} handleClose={nextQuestion}>
 							<ModalHeader>
 								<h2>¡Subiste de nivel!</h2>
@@ -408,16 +397,16 @@ const Game = ({ questions, reset, subject }: Props) => {
 									<p className={s.game__container__modal_info__text}>
 										Aún no tienes nada asegurado. Si te retiras ahora, te llevas{' '}
 										{formatPrize(currentAward.prize)}. Si continúas, podrías
-										ganar {formatPrize(awards[currentQuestionIndex + 1].prize)}.
-										¡Pero cuidado, podrías irte con las manos vacías!
+										ganar {formatPrize(awards[currentQuestionIndex + 1]?.prize)}
+										. ¡Pero cuidado, podrías irte con las manos vacías!
 									</p>
 								) : (
 									<p className={s.game__container__modal_info__text}>
 										Tienes {formatPrize(securedMoney)} asegurados. Si te retiras
 										ahora, te llevas {formatPrize(currentAward.prize)}. Si
 										continúas, podrías ganar{' '}
-										{formatPrize(awards[currentQuestionIndex + 1].prize)}. ¡Pero
-										si pierdes, te irás con {formatPrize(securedMoney)}!
+										{formatPrize(awards[currentQuestionIndex + 1]?.prize)}.
+										¡Pero si pierdes, te irás con {formatPrize(securedMoney)}!
 									</p>
 								)}
 								<div className={s.game__container__modal_info__buttons}>
@@ -499,8 +488,14 @@ const Game = ({ questions, reset, subject }: Props) => {
 						</Modal>
 					</>
 				) : (
-					<div className={s.game__container__intro}>
-						<img width={226} height={182} src="/img/cloud.png" alt="Intro" />
+					<div className={s.game__container__intro} key={2}>
+						<img
+							width={226}
+							height={182}
+							src="/img/cloud.png"
+							alt="Intro"
+							className={s.game__container__intro__img}
+						/>
 						<h1
 							className={`${bebasNeue.className} ${s.game__container__intro__title}`}
 						>
