@@ -39,6 +39,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 	const [gameOverType, setGameOverType] = useState<GameOver>(GameOver.None)
 	const [securedMoney, setSecuredMoney] = useState(0)
 	const [realIndex, setRealIndex] = useState(0)
+	const [isWithdraw, setIsWithdraw] = useState(false)
 	const [win, setWin] = useState(false)
 
 	/* Modals */
@@ -83,19 +84,19 @@ const Game = ({ questions, reset, subject }: Props) => {
 	) => {
 		setOpenPhoneCallModal(false)
 		setOpenPublicHelpModal(false)
-		setGameOverType(type)
 		setOpenSuccessModal(false)
+		setGameOverType(type)
 	}
 
 	const setDefaultsToSetQuestion = () => {
 		setDisabledOptions([])
 		setAnswerSelected(null)
+		setOpenSuccessModal(false)
 	}
 
 	const nextQuestion = () => {
 		setCurrentQuestionIndex(currentQuestionIndex + 1)
 		setDefaultsToSetQuestion()
-		setOpenSuccessModal(false)
 	}
 
 	const playAgain = () => {
@@ -104,6 +105,8 @@ const Game = ({ questions, reset, subject }: Props) => {
 		setDefaultsToSetQuestion()
 		setSecuredMoney(0)
 		setRealIndex(0)
+		setWin(false)
+		setIsWithdraw(false)
 
 		setIsPublicHelpAvailable(true)
 		setIsPhoneCallAvailable(true)
@@ -137,6 +140,11 @@ const Game = ({ questions, reset, subject }: Props) => {
 		)
 		setDisabledOptions(newDisabledOptions.map(([option]) => option))
 		setIsFiftyFiftyAvailable(false)
+	}
+
+	const withdraw = () => {
+		gameOver(GameOver.Withdraw)
+		setIsWithdraw(true)
 	}
 
 	return (
@@ -444,7 +452,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 									</p>
 								)}
 								<div className={s.game__container__modal_info__buttons}>
-									<Button fullWidth onClick={() => gameOver(GameOver.Withdraw)}>
+									<Button fullWidth onClick={withdraw}>
 										Retirarse con{' '}
 										{formatPrize(awards[currentQuestionIndex].prize)}
 									</Button>
@@ -504,9 +512,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 											height={22}
 										/>
 										{formatPrize(
-											gameOverType === GameOver.Withdraw && realIndex > 0
-												? currentAward.prize
-												: securedMoney
+											isWithdraw ? currentAward.prize : securedMoney
 										)}
 									</p>
 								</div>
