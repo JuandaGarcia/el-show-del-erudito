@@ -1,22 +1,19 @@
 import s from './Game.module.scss'
-import Modal, {
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-} from 'components/ui/Modal/Modal'
 import Button from 'components/ui/Button/Button'
-import confetti from 'canvas-confetti'
 import PhoneIcon from 'components/PhoneIcon/PhoneIcon'
 import PublicHelpChart from 'components/PublicHelpChart/PublicHelpChart'
 import { MdPhone } from 'react-icons/md'
-import { CSSProperties, useState } from 'react'
 import { Question } from 'utils/schemas/question'
 import { bebasNeue } from 'fonts/bebasNeue'
 import { GoHomeFill } from 'react-icons/go'
 import { IoIosPeople } from 'react-icons/io'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
-import { awards, buttonSelectedAnimationDuration } from 'utils/constants'
 import { PiArrowCircleLeftBold } from 'react-icons/pi'
+import { CSSProperties, useState } from 'react'
+import { confettiSuccess, confettiWin } from 'utils/confetti'
+import Modal, { ModalContent, ModalHeader } from 'components/ui/Modal/Modal'
+import { awards, buttonSelectedAnimationDuration } from 'utils/constants'
+import CreatedBy from 'components/CreatedBy/CreatedBy'
 
 type Props = {
 	questions: Question[]
@@ -42,6 +39,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 	const [gameOverType, setGameOverType] = useState<GameOver>(GameOver.None)
 	const [securedMoney, setSecuredMoney] = useState(0)
 	const [realIndex, setRealIndex] = useState(0)
+	const [win, setWin] = useState(false)
 
 	/* Modals */
 	const [openPublicHelpModal, setOpenPublicHelpModal] = useState(false)
@@ -64,19 +62,15 @@ const Game = ({ questions, reset, subject }: Props) => {
 		setTimeout(() => {
 			if (answer === currentQuestion.correct_answer) {
 				if (questions.length === currentQuestionIndex + 1) {
-					setGameOverType(GameOver.Withdraw)
+					setWin(true)
+					confettiWin()
 				} else {
 					if (currentAward.milestone) {
 						setSecuredMoney(currentAward.prize)
 					}
 					setRealIndex(currentQuestionIndex + 1)
 					setOpenSuccessModal(true)
-					confetti({
-						particleCount: 25,
-						spread: 70,
-						origin: { y: 0.6 },
-						colors: ['#5608d2'],
-					})
+					confettiSuccess()
 				}
 			} else {
 				setGameOverType(GameOver.Answer)
@@ -161,7 +155,47 @@ const Game = ({ questions, reset, subject }: Props) => {
 				alt="Luz de la habitación"
 			/>
 			<section className={s.game__container}>
-				{isStarted ? (
+				{!isStarted ? (
+					<div className={s.game__container__intro} key={2}>
+						<img
+							width={226}
+							height={182}
+							src="/img/cloud.png"
+							alt="Intro"
+							className={s.game__container__intro__img}
+						/>
+						<h1
+							className={`${bebasNeue.className} ${s.game__container__intro__title}`}
+						>
+							{subject}
+						</h1>
+						<p className={s.game__container__intro__text}>
+							A medida que respondas correctamente, avanzarás a preguntas más
+							difíciles y acumularás puntos. Puedes usar los comodines “50:50”,
+							“Llamada a un amigo” y “Ayuda del Público” para recibir asistencia
+							cuando lo necesites.
+						</p>
+						<div className={s.game__container__intro__items}>
+							<IoIosPeople size={32} />
+							<MdPhone size={32} />
+							<span>50 : 50</span>
+						</div>
+						<Button
+							fullWidth
+							onClick={startGame}
+							className={s.game__container__intro__button}
+						>
+							Jugar
+						</Button>
+						<button
+							aria-label="Volver al inicio"
+							className={s.game__container__intro__reset}
+							onClick={reset}
+						>
+							<PiArrowCircleLeftBold size={32} />
+						</button>
+					</div>
+				) : !win ? (
 					<>
 						<div className={s.game__container__controls} key={1}>
 							<Button
@@ -488,35 +522,31 @@ const Game = ({ questions, reset, subject }: Props) => {
 						</Modal>
 					</>
 				) : (
-					<div className={s.game__container__intro} key={2}>
+					<div className={s.game__container__intro} key={3}>
+						<h1>¡Lo lograste!</h1>
+						<p className={s.game__container__intro__text}>
+							Has respondido a todas las preguntas y te llevas a casa el gran
+							premio de $1,000,000. ¡Eres el Einstein de nuestro show! Gracias
+							por jugar a El Show del Erudito. ¡Ve y disfruta de tu victoria,
+							sabio supremo!
+						</p>
+						<p
+							className={`${bebasNeue.className} ${s.game__container__intro__prize}`}
+						>
+							<img src="/img/money.svg" alt="Dinero" width={35} height={28} />
+							{formatPrize(awards[awards.length - 1].prize)}
+						</p>
+						<h2>Escanea el código QR para reclamar tu dinero</h2>
 						<img
-							width={226}
-							height={182}
-							src="/img/cloud.png"
-							alt="Intro"
+							src="/img/qr.png"
+							alt="Código QR"
+							width={120}
+							height={159}
 							className={s.game__container__intro__img}
 						/>
-						<h1
-							className={`${bebasNeue.className} ${s.game__container__intro__title}`}
-						>
-							{subject}
-						</h1>
-						<p className={s.game__container__intro__text}>
-							A medida que respondas correctamente, avanzarás a preguntas más
-							difíciles y acumularás puntos. Puedes usar los comodines “50:50”,
-							“Llamada a un amigo” y “Ayuda del Público” para recibir asistencia
-							cuando lo necesites.
-						</p>
-						<div className={s.game__container__intro__items}>
-							<IoIosPeople size={32} />
-							<MdPhone size={32} />
-							<span>50 : 50</span>
-						</div>
-						<Button
-							onClick={startGame}
-							className={s.game__container__intro__button}
-						>
-							Jugar
+						<CreatedBy />
+						<Button onClick={playAgain}>
+							Volver a jugar con las mismas preguntas
 						</Button>
 						<button
 							aria-label="Volver al inicio"

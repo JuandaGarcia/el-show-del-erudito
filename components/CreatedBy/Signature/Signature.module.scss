@@ -1,9 +1,5 @@
 .signature {
 	width: 7rem;
-	pointer-events: none;
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
 	animation: hide 0.5s linear forwards 2.5s;
 	path {
 		stroke-width: 5px;

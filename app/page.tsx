@@ -1,20 +1,19 @@
 'use client'
 import s from './page.module.scss'
+import Game from 'components/Game/Game'
 import Logo from 'components/ui/Logo/Logo'
-import Signature from 'components/Signature/Signature'
-import CreatedBy from 'components/CreatedBy/CreatedBy'
+import Input from 'components/ui/Input/Input'
 import Button from 'components/ui/Button/Button'
+import CreatedBy from 'components/CreatedBy/CreatedBy'
+import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { Question } from 'utils/schemas/question'
+import { createQuestions } from 'lib/createQuestions'
 import Modal, {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
 } from 'components/ui/Modal/Modal'
-import { useState } from 'react'
-import Input from 'components/ui/Input/Input'
-import { useForm } from 'react-hook-form'
-import { createQuestions } from 'lib/createQuestions'
-import { Question } from 'utils/schemas/question'
-import Game from 'components/Game/Game'
 
 export const maxDuration = 60
 const Home = () => {
@@ -71,10 +70,7 @@ const Home = () => {
 				<Button className={s.home__content__button} onClick={toggleStartModal}>
 					¡Jugar ahora!
 				</Button>
-				<div className={s.home__content__created_by}>
-					<CreatedBy />
-					<Signature />
-				</div>
+				<CreatedBy type="home" />
 				<Modal open={openHowWorlsModal} handleClose={toggleOpenHowWorksModal}>
 					<ModalHeader>
 						<h2>¿Cómo funciona?</h2>
