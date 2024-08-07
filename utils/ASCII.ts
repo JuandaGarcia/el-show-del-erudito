@@ -13,7 +13,7 @@ const ASCII = () => {
                                            
 🦊 Web developed by Juan David Garcia: https://github.com/JuandaGarcia
 
-💣 Project: https://github.com/JuandaGarcia/the-scholar-show
+💣 Project: https://github.com/JuandaGarcia/el-show-del-erudito
 
 💼 Linkedin: https://www.linkedin.com/in/juandagarciaa
 
