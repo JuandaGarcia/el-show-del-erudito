@@ -27,6 +27,7 @@ enum GameOver {
 	None = 0,
 	Time = 1,
 	Answer = 2,
+	Withdraw = 3,
 }
 const Game = ({ questions, reset, subject }: Props) => {
 	/* Game State */
@@ -40,6 +41,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 	const [numberOfTimesPlayed, setNumberOfTimesPlayed] = useState(0)
 	const [gameOverType, setGameOverType] = useState<GameOver>(GameOver.None)
 	const [securedMoney, setSecuredMoney] = useState(0)
+	const [realIndex, setRealIndex] = useState(0)
 
 	/* Modals */
 	const [openPublicHelpModal, setOpenPublicHelpModal] = useState(false)
@@ -66,6 +68,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 				if (currentAward.milestone) {
 					setSecuredMoney(currentAward.prize)
 				}
+				setRealIndex(currentQuestionIndex + 1)
 				setOpenSuccessModal(true)
 				confetti({
 					particleCount: 25,
@@ -79,10 +82,13 @@ const Game = ({ questions, reset, subject }: Props) => {
 		}, buttonSelectedAnimationDuration + 700)
 	}
 
-	const gameOver = (type: GameOver.Answer | GameOver.Time) => {
+	const gameOver = (
+		type: GameOver.Answer | GameOver.Time | GameOver.Withdraw
+	) => {
 		setOpenPhoneCallModal(false)
 		setOpenPublicHelpModal(false)
 		setGameOverType(type)
+		setOpenSuccessModal(false)
 	}
 
 	const setDefaultsToSetQuestion = () => {
@@ -100,6 +106,8 @@ const Game = ({ questions, reset, subject }: Props) => {
 		setIsStarted(false)
 		setCurrentQuestionIndex(0)
 		setDefaultsToSetQuestion()
+		setSecuredMoney(0)
+		setRealIndex(0)
 
 		setIsPublicHelpAvailable(true)
 		setIsPhoneCallAvailable(true)
@@ -154,9 +162,30 @@ const Game = ({ questions, reset, subject }: Props) => {
 				{isStarted ? (
 					<>
 						<div className={s.game__container__controls}>
-							<Button aria-label="Volver al Inicio" onClick={toggleGoHomeModal}>
+							<Button
+								aria-label="Volver al Inicio"
+								onClick={() => gameOver(GameOver.Withdraw)}
+							>
 								<GoHomeFill />
 							</Button>
+							<div className={s.game__container__controls__awards}>
+								<p
+									className={`${bebasNeue.className} ${s.game__container__controls__awards__prize}`}
+								>
+									<img
+										src="/img/money.svg"
+										alt="Dinero"
+										width={28}
+										height={22}
+									/>
+									{realIndex === 0
+										? formatPrize(0)
+										: formatPrize(awards[realIndex - 1].prize)}
+								</p>
+								<p className={s.game__container__controls__awards__secured}>
+									Dinero asegurado: {formatPrize(securedMoney)}
+								</p>
+							</div>
 							<div
 								className={`${s.game__container__controls__countdown} ${
 									openPhoneCallModal ||
@@ -168,7 +197,9 @@ const Game = ({ questions, reset, subject }: Props) => {
 							>
 								<CountdownCircleTimer
 									key={currentQuestionIndex + numberOfTimesPlayed}
-									isPlaying={answerSelected === null}
+									isPlaying={
+										answerSelected === null && gameOverType === GameOver.None
+									}
 									duration={30}
 									colors={['#86E69B', '#e7b416', '#f57c61']}
 									trailColor="#fff"
@@ -344,7 +375,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 						</Modal>
 						<Modal open={openSuccessModal} handleClose={nextQuestion}>
 							<ModalHeader>
-								<h2>¡Subiste de nivel! 💸</h2>
+								<h2>¡Subiste de nivel!</h2>
 							</ModalHeader>
 							<ModalContent>
 								<div className={s.game__container__modal_info__awards}>
@@ -390,7 +421,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 									</p>
 								)}
 								<div className={s.game__container__modal_info__buttons}>
-									<Button fullWidth onClick={reset}>
+									<Button fullWidth onClick={() => gameOver(GameOver.Withdraw)}>
 										Retirarse con{' '}
 										{formatPrize(awards[currentQuestionIndex].prize)}
 									</Button>
@@ -406,7 +437,13 @@ const Game = ({ questions, reset, subject }: Props) => {
 							open={gameOverType !== GameOver.None}
 						>
 							<div className={s.game__container__modal}>
-								<h2 className={s.game__container__modal__title}>Game Over</h2>
+								<h2 className={s.game__container__modal__title}>
+									{gameOverType === GameOver.Time
+										? '¡Se acabó el tiempo! 😢'
+										: gameOverType === GameOver.Answer
+										? '¡Has perdido! 😢'
+										: '¡Gracias por jugar!'}
+								</h2>
 								{gameOverType === GameOver.Time ? (
 									<img
 										src="/img/timer.png"
@@ -415,7 +452,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 										height={125}
 										className={s.game__container__modal__time}
 									/>
-								) : (
+								) : gameOverType === GameOver.Answer ? (
 									<img
 										src="/img/egg.svg"
 										alt="Huevo"
@@ -423,12 +460,33 @@ const Game = ({ questions, reset, subject }: Props) => {
 										height={86}
 										className={s.game__container__modal__egg}
 									/>
+								) : (
+									<img
+										src="/img/pizza.png"
+										alt="Pizza"
+										width={279}
+										height={101}
+										className={s.game__container__modal__pizza}
+									/>
 								)}
-								<p className={s.game__container__modal__title}>
-									{gameOverType === GameOver.Time
-										? '¡Se acabó el tiempo! 😢'
-										: '¡Has perdido! 😢'}
-								</p>
+								<div className={s.game__container__modal__award}>
+									<p>Tu ganancias:</p>
+									<p
+										className={`${bebasNeue.className} ${s.game__container__modal__award__prize}`}
+									>
+										<img
+											src="/img/money.svg"
+											alt="Dinero"
+											width={28}
+											height={22}
+										/>
+										{formatPrize(
+											gameOverType === GameOver.Withdraw && realIndex > 0
+												? currentAward.prize
+												: securedMoney
+										)}
+									</p>
+								</div>
 								<div className={s.game__container__modal__buttons}>
 									<Button fullWidth onClick={playAgain}>
 										Jugar de nuevo con las mismas preguntas
