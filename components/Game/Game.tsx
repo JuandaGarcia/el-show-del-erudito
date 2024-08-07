@@ -39,6 +39,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 	const [answerSelected, setAnswerSelected] = useState<string | null>(null)
 	const [numberOfTimesPlayed, setNumberOfTimesPlayed] = useState(0)
 	const [gameOverType, setGameOverType] = useState<GameOver>(GameOver.None)
+	const [securedMoney, setSecuredMoney] = useState(0)
 
 	/* Modals */
 	const [openPublicHelpModal, setOpenPublicHelpModal] = useState(false)
@@ -49,6 +50,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 	/* Values */
 	const currentQuestion = questions[currentQuestionIndex]
 	const currentOptions = Object.entries(currentQuestion.options)
+	const currentAward = awards[currentQuestionIndex]
 	const buttonEvents = answerSelected ? s.remove_events : ''
 
 	const startGame = () => setIsStarted(true)
@@ -61,6 +63,9 @@ const Game = ({ questions, reset, subject }: Props) => {
 		// Await for the button animation
 		setTimeout(() => {
 			if (answer === currentQuestion.correct_answer) {
+				if (currentAward.milestone) {
+					setSecuredMoney(currentAward.prize)
+				}
 				setOpenSuccessModal(true)
 				confetti({
 					particleCount: 25,
@@ -368,11 +373,22 @@ const Game = ({ questions, reset, subject }: Props) => {
 										</p>
 									))}
 								</div>
-								<p className={s.game__container__modal_info__text}>
-									Aún no tienes nada asegurado. Si te retiras ahora, te llevas
-									$100. Si continúas, podrías ganar $200. ¡Pero cuidado, podrías
-									irte con las manos vacías!
-								</p>
+								{!securedMoney ? (
+									<p className={s.game__container__modal_info__text}>
+										Aún no tienes nada asegurado. Si te retiras ahora, te llevas{' '}
+										{formatPrize(currentAward.prize)}. Si continúas, podrías
+										ganar {formatPrize(awards[currentQuestionIndex + 1].prize)}.
+										¡Pero cuidado, podrías irte con las manos vacías!
+									</p>
+								) : (
+									<p className={s.game__container__modal_info__text}>
+										Tienes {formatPrize(securedMoney)} asegurados. Si te retiras
+										ahora, te llevas {formatPrize(currentAward.prize)}. Si
+										continúas, podrías ganar{' '}
+										{formatPrize(awards[currentQuestionIndex + 1].prize)}. ¡Pero
+										si pierdes, te irás con {formatPrize(securedMoney)}!
+									</p>
+								)}
 								<div className={s.game__container__modal_info__buttons}>
 									<Button fullWidth onClick={reset}>
 										Retirarse con{' '}
