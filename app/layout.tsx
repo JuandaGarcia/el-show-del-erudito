@@ -9,6 +9,10 @@ export const metadata: Metadata = {
 	title: 'El Show del Erudito - Juego de Trivia',
 	description:
 		'Prepárate para desafiar tu conocimiento y divertirte como nunca en este emocionante juego de trivia. En El Show del Erudito, tendrás la oportunidad de poner a prueba tus habilidades mentales con preguntas generadas especialmente para ti, basadas en el tema de tu elección.',
+	openGraph: {
+		images:
+			'https://raw.githubusercontent.com/JuandaGarcia/el-show-del-erudito/main/public/img/thumbnail.jpg',
+	},
 }
 
 export default function RootLayout({
