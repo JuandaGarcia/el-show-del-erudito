@@ -107,7 +107,7 @@ const Home = () => {
 								<span>¿Qué tema te interesa?</span>
 								<Input
 									fullWidth
-									placeholder="Ej: JavaScript, Musica, React, Cine, etc..."
+									placeholder="Ej: Musica, Cine, Cultura general, etc..."
 									maxLength={maxLengthSubject}
 									error={errors.subject?.message}
 									disabled={isSubmitting}
