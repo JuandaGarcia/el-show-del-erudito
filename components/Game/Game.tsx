@@ -14,6 +14,7 @@ import { confettiSuccess, confettiWin } from 'utils/confetti'
 import Modal, { ModalContent, ModalHeader } from 'components/ui/Modal/Modal'
 import { awards, buttonSelectedAnimationDuration } from 'utils/constants'
 import CreatedBy from 'components/CreatedBy/CreatedBy'
+import MotionNumber from 'motion-number'
 
 type Props = {
 	questions: Question[]
@@ -254,7 +255,11 @@ const Game = ({ questions, reset, subject }: Props) => {
 								>
 									{({ remainingTime }) => (
 										<span className={`${bebasNeue.className}`}>
-											{remainingTime}
+											<MotionNumber
+												value={remainingTime}
+												format={{ notation: 'compact' }} // Intl.NumberFormat() options
+												locales="en-US" // Intl.NumberFormat() locales
+											/>
 										</span>
 									)}
 								</CountdownCircleTimer>
