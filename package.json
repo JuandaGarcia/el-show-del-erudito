@@ -9,20 +9,20 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
-		"@ai-sdk/openai": "^0.0.43",
-		"ai": "^3.3.3",
+		"@ai-sdk/openai": "^0.0.49",
+		"ai": "^3.3.11",
 		"canvas-confetti": "^1.9.3",
 		"next": "14.2.5",
 		"react": "^18",
 		"react-countdown-circle-timer": "^3.2.1",
 		"react-dom": "^18",
 		"react-hook-form": "^7.52.2",
-		"react-icons": "^5.2.1",
+		"react-icons": "^5.3.0",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@types/canvas-confetti": "^1.6.4",
-		"@types/node": "^22.1.0",
+		"@types/node": "^22.4.1",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
 		"eslint": "^8",
