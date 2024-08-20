@@ -15,9 +15,11 @@ import Modal, { ModalContent, ModalHeader } from 'components/ui/Modal/Modal'
 import { awards, buttonSelectedAnimationDuration } from 'utils/constants'
 import CreatedBy from 'components/CreatedBy/CreatedBy'
 import MotionNumber from 'motion-number'
+import { shuffleAnswers } from 'utils/shuffleAnswers'
 
 type Props = {
 	questions: Question[]
+	setQuestions: (questions: Question[]) => void
 	reset: () => void
 	subject: string
 }
@@ -27,7 +29,7 @@ enum GameOver {
 	Answer = 2,
 	Withdraw = 3,
 }
-const Game = ({ questions, reset, subject }: Props) => {
+const Game = ({ questions, setQuestions, reset, subject }: Props) => {
 	/* Game State */
 	const [isStarted, setIsStarted] = useState(false)
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -101,6 +103,7 @@ const Game = ({ questions, reset, subject }: Props) => {
 	}
 
 	const playAgain = () => {
+		setQuestions(shuffleAnswers(questions))
 		setIsStarted(false)
 		setCurrentQuestionIndex(0)
 		setDefaultsToSetQuestion()

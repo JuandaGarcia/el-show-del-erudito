@@ -14,6 +14,7 @@ import Modal, {
 	ModalFooter,
 	ModalHeader,
 } from 'components/ui/Modal/Modal'
+import { shuffleAnswers } from 'utils/shuffleAnswers'
 
 export const maxDuration = 60
 const Home = () => {
@@ -37,7 +38,7 @@ const Home = () => {
 		const { questions, error_message } = await createQuestions(subject)
 
 		if (questions) {
-			setQuestions(questions)
+			setQuestions(shuffleAnswers(questions))
 			setOpenStartModal(false)
 		} else if (error_message) {
 			setQuestionsError(error_message)
@@ -47,7 +48,12 @@ const Home = () => {
 	const resetQuestions = () => setQuestions([])
 
 	return questions.length ? (
-		<Game questions={questions} reset={resetQuestions} subject={subject} />
+		<Game
+			questions={questions}
+			setQuestions={setQuestions}
+			reset={resetQuestions}
+			subject={subject}
+		/>
 	) : (
 		<main className={s.home}>
 			<section className={s.home__content}>
