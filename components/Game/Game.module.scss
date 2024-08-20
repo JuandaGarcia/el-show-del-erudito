@@ -277,7 +277,7 @@
 		}
 	}
 	&__room1 {
-		position: absolute;
+		position: fixed;
 		left: 0;
 		bottom: 0;
 		width: 50vw;
@@ -285,12 +285,13 @@
 		user-select: none;
 		animation: room1 1s ease-in-out;
 		@include desktop {
+			position: absolute;
 			width: initial;
 			height: 85vh;
 		}
 	}
 	&__room2 {
-		position: absolute;
+		position: fixed;
 		right: 0;
 		bottom: 0;
 		width: 50vw;
@@ -298,6 +299,7 @@
 		user-select: none;
 		animation: room2 1s ease-in-out;
 		@include desktop {
+			position: absolute;
 			width: initial;
 			height: 85vh;
 		}
@@ -334,13 +336,16 @@
 		}
 	}
 	&__floor {
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		left: 0;
 		width: 100%;
 		height: 20vh;
 		pointer-events: none;
 		user-select: none;
+		@include desktop {
+			position: absolute;
+		}
 	}
 }
 
