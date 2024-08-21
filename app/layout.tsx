@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Exo_2 } from 'next/font/google'
 import './globals.scss'
 import ClientEvents from 'components/ClientEvents/ClientEvents'
+import { Analytics } from '@vercel/analytics/react'
 
 const exo2 = Exo_2({ subsets: ['latin'] })
 
@@ -27,6 +28,7 @@ export default function RootLayout({
 				{children}
 				<ClientEvents />
 				<div id="modal" />
+				<Analytics />
 			</body>
 		</html>
 	)
