@@ -1,0 +1,44 @@
+{
+	"background_color": "#ffdab8",
+	"categories": ["education", "entertainment", "games"],
+	"description": "En El Show del Erudito, tendrás la oportunidad de poner a prueba tus habilidades mentales con preguntas generadas especialmente para ti, basadas en el tema de tu elección.",
+	"display": "standalone",
+	"icons": [
+		{
+			"purpose": "maskable",
+			"src": "/icons/icon.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	],
+	"name": "El Show del Erudito",
+	"screenshots": [
+		{
+			"src": "/pwa/screenshot1.jpg",
+			"sizes": "1008x1920",
+			"type": "image/jpg"
+		},
+		{
+			"src": "/pwa/screenshot2.jpg",
+			"sizes": "1008x1920",
+			"type": "image/jpg"
+		}
+	],
+	"shortcuts": [
+		{
+			"name": "Jugar",
+			"url": "/",
+			"icons": [
+				{
+					"src": "/icons/shortcut.png",
+					"type": "image/png",
+					"sizes": "192x192"
+				}
+			]
+		}
+	],
+	"short_name": "E.S.D.E",
+	"start_url": "/",
+	"theme_color": "#ffdab8",
+	"scope": "/"
+}
