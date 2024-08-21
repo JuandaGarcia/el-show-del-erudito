@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 		images:
 			'https://raw.githubusercontent.com/JuandaGarcia/el-show-del-erudito/main/public/img/thumbnail.jpg',
 	},
+	manifest: '/manifest.json',
 }
 
 export default function RootLayout({
