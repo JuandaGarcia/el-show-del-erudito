@@ -1,8 +1,13 @@
+@import '../../../styles/mixins/responsive';
+
 .modal {
 	position: relative;
 	z-index: 2;
 	$animation-duration: 0.2s;
-	$padding: 2rem;
+	--modal-padding: 1rem;
+	@include desktop {
+		--modal-padding: 2rem;
+	}
 	&__content {
 		position: fixed;
 		top: 50%;
@@ -10,7 +15,7 @@
 		transform: translate(-50%, -50%);
 		animation: content $animation-duration linear forwards;
 		z-index: 1;
-		width: calc(100% - (2 * #{$padding}));
+		width: calc(100% - (2 * var(--modal-padding)));
 		max-width: 450px;
 		background-color: rgba(86, 8, 210, 0.8);
 		backdrop-filter: saturate(180%) blur(5px);
@@ -34,17 +39,20 @@
 		}
 		&__header {
 			text-align: center;
-			padding: $padding;
+			padding: var(--modal-padding);
 			color: #fff;
-			font-size: 1.5rem;
+			font-size: 1.2rem;
+			@include desktop {
+				font-size: 1.5rem;
+			}
 		}
 		&__content {
-			padding: $padding;
+			padding: var(--modal-padding);
 			background-color: #fff;
 			color: var(--color-brand-1);
 		}
 		&__footer {
-			padding: $padding;
+			padding: var(--modal-padding);
 		}
 	}
 	&__overlay {

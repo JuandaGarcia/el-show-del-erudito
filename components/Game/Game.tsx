@@ -559,7 +559,10 @@ const Game = ({ questions, setQuestions, reset, subject }: Props) => {
 							className={s.game__container__intro__img}
 						/>
 						<CreatedBy />
-						<Button onClick={playAgain}>
+						<Button
+							onClick={playAgain}
+							className={s.game__container__intro__play_again}
+						>
 							Volver a jugar con las mismas preguntas
 						</Button>
 						<button

@@ -35,6 +35,13 @@
 				font-size: 14px;
 				width: 100%;
 				max-width: 500px;
+				background: rgb(255, 255, 255, 0.9);
+				padding: 1rem;
+				border-radius: 2rem;
+				@include desktop {
+					background: none;
+					padding: none;
+				}
 			}
 			&__prize {
 				display: flex;
@@ -56,6 +63,13 @@
 			&__button {
 				width: 100%;
 				max-width: 300px;
+			}
+			&__play_again {
+				width: 100%;
+				max-width: 300px;
+				@include desktop {
+					max-width: initial;
+				}
 			}
 			&__reset {
 				background: none;
@@ -97,6 +111,7 @@
 			animation: zoomIn 1s;
 			&__button {
 				font-size: 1.2rem;
+				padding: 0 !important;
 				@include desktop {
 					font-size: 1.5rem;
 				}
@@ -307,7 +322,7 @@
 	&__plant {
 		position: absolute;
 		top: 0;
-		right: 2rem;
+		left: 3rem;
 		width: 6rem;
 		animation: plant 1s ease-in-out;
 		pointer-events: none;
@@ -317,12 +332,13 @@
 			width: initial;
 			height: 40vh;
 			right: 15vw;
+			left: initial;
 		}
 	}
 	&__light {
 		position: absolute;
 		top: 0;
-		left: 2rem;
+		left: 1rem;
 		width: 5rem;
 		animation: light 1s ease-in-out;
 		pointer-events: none;
